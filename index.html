@@ -34,15 +34,1438 @@
 				
 				<!-- START StackTome Widget -->
 
-  <div id="reviewsBuyBoxHeader" class="stacktome-widget-312" data-product-id="ORI600_LMR">
-                    <div class="stacktome_body custom-body">
-                    <div class="stacktome_slider-widget">
-                   <span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
-                        <meta itemprop="reviewCount" content="4" />
-                        <meta itemprop="bestRating" content="5" />
-                        <meta itemprop="ratingValue" content="4.00" />
-                    </span>
-                    </div></div></div>
+ <div class='stacktome_slider-widget'>
+	{% assign review_source = reviewsData.summary_review_source %}
+	{% assign summary_rating = reviewsData.summary_rating %}
+	{% assign summary_count = reviewsData.summary_count %}
+	{% assign reviews = reviewsData.reviews %}
+	{% assign floor_summary_rating = summary_rating | floor %}
+	{% assign ceil_summary_rating = summary_rating | ceil %}
+	{% assign fill_percentage = summary_rating | minus: floor_summary_rating | times: 100 | ceil %}
+			
+	<style>
+		#stacktome {
+	all: initial;	
+	box-sizing: border-box;
+	font-family: sans-serif;
+	font-size: 16px;
+}
+
+#stacktome > *,
+#stacktome > *::before,
+#stacktome > *::after {
+	margin: 0;
+	padding: 0;
+}
+
+#stacktome {
+	max-width: 700px;
+	width: 100%;
+	min-width: 330px;
+}
+
+#stacktome ol,
+#stacktome ul {
+	list-style: none;
+}
+
+.stacktome_review-element {
+	background-color: {{ userWidgetConfig.styles.reviewBackgroundColor }};
+}
+
+.custom-font-size {
+	font-size: {{ userWidgetConfig.styles.reviewTextFontSize }}px;
+}
+
+.custom-font-color {
+	{% if userWidgetConfig.layoutStyle == "unstyled" %}
+		color: {{ userWidgetConfig.styles.textColor }};
+	{% endif %}
+}
+
+.custom-icon-color {
+	fill: {{ userWidgetConfig.styles.textColor }};
+}
+
+.stacktome_link {
+	color: {{ userWidgetConfig.styles.linksColor }} !important;
+	text-decoration: underline;
+}
+
+.stacktome_body {
+	background-color: {{ userWidgetConfig.styles.backgroundColor }};
+}
+
+.stacktome_customer-name {
+	font-weight: bold;
+	margin-bottom: 8px;
+	margin-top: 0;
+
+	{% if userWidgetConfig.layoutStyle == "trustpilot" or userWidgetConfig.layoutStyle == "style1" %}
+		font-weight: 700;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		font-family: "Helvetica Neue","Helvetica","Arial","sans-serif";
+		color: #5c5c70;
+		font-size: 12px;
+		display: flex;
+		flex-direction: row;
+	{% endif %}
+}
+
+.stacktome_review-stars {
+	flex-direction: row;
+	display: flex;
+	align-items: center;
+}
+
+.stacktome_review-stars-for-product-card {
+	flex-direction: row;
+	display: flex;
+	align-items: center;
+}
+
+.stacktome_icon, stacktome_symbol {
+	overflow: visible
+}
+.stacktome_icon {
+	height: {{ userWidgetConfig.styles.iconHeight }}px;
+}
+
+.stacktome_total-info {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	padding: 0px 10px 40px 40px;
+}
+
+.stacktome_total-info-header {
+	padding: 8px 0 0 0;
+	font-size: {{ userWidgetConfig.styles.widgetTitleFontSize }}px;
+}
+
+.stacktome_total-info-body {
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	margin-bottom: 8px;
+
+	{% if userWidgetConfig.layoutStyle == "unstyled" %}
+		flex-direction: row;
+	{% endif %}
+
+	{% if userWidgetConfig.layoutStyle == "trustpilot" or userWidgetConfig.layoutStyle == "style1" %}
+		flex-direction: column;
+	{% endif %}
+}
+
+.stacktome_total-stars {
+	margin: 0;
+	margin-right: 10px;
+}
+
+.stacktome_total-icons {
+	height: 35px;
+}
+
+.stacktome_total-icons-part {
+	position: relative;
+	height: 35px;
+	transform: rotateY(180deg);
+
+	{% if userWidgetConfig.content.widgetContent.id == 7 %}
+		display: flex;
+		align-items: center;
+	{% endif %}
+}
+
+.stacktome_total-icons-part::after {
+	bottom: 0;
+	content: "";
+	position: absolute;
+	width: calc(100% - {{ fill_percentage }}%);
+	height: 100%;
+	left: 0;
+	right: 0;
+	background-color: {{ userWidgetConfig.styles.backgroundColor }};
+}
+
+.empty-stars {
+	display: none;
+}
+
+.stacktome_total-info-body-text {
+	font-size: 45px;
+}
+
+.stacktome_total-info-total-reviews {
+	margin: 0 0 10px 0;
+	font-size: 20px;
+
+	{% if userWidgetConfig.layoutStyle == "trustpilot" or userWidgetConfig.layoutStyle == "style1" %}
+		font-size: 13px;
+		line-height: 16px;
+	{% endif %}
+}
+
+.stacktome_total-info-source {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stacktome_total-info-source span {
+	border-radius: 4px;
+    padding: 15px;
+    background-color: #ffff;
+    width: 35%;
+
+	{% if userWidgetConfig.layoutStyle == "trustpilot" or userWidgetConfig.layoutStyle == "style1" %}
+		padding: 0;
+		width: 106px;
+		height: 26px;
+	{% endif %}
+}
+
+.stacktome_total-info-source span img {
+	width: 100%;
+}
+
+.stacktome_word-cloud {
+	fill: {{ userWidgetConfig.styles.textColor }};
+	cursor: default;
+}
+
+.stacktome-reviews-wrapper {
+	flex-grow: 1;
+}
+
+{% if userWidgetConfig.reviews.shownElements.wordcloudClickable == true %}
+	.stacktome_word-cloud:hover {
+		cursor: pointer;
+		fill: {{ userWidgetConfig.styles.wordcloudWordHoverColor }};
+	}
+{% endif %}
+
+.stacktome_additional-info {
+	font-size: 20px;
+	padding: 10px 40px;
+
+	{% if userWidgetConfig.layoutStyle == "trustpilot" or userWidgetConfig.layoutStyle == "style1" %}
+		padding: 0 5%;
+		border-bottom: 1px solid #d6d6d6;
+		padding: 16px 5%;
+	{% endif %}
+}
+
+.stacktome_additional-info-review-count {
+	{% if userWidgetConfig.content.widgetContent.id == 7 %}
+		margin-left: 12px;
+	{% endif %}
+	font-size: 15px;
+}
+
+.stacktome_additional-info-header {
+	padding: 8px 0 0 0;
+	font-size: {{ userWidgetConfig.styles.widgetTitleFontSize }}px;
+}
+
+.stacktome_additional-info-body-text {
+	height: 35px;
+	font-size: 20px;
+	line-height: 35px;
+	margin-right: 20px;
+}
+
+.stacktome_additional-icons {
+	{% if userWidgetConfig.content.widgetContent.id != 7 %}
+		height: 35px;
+	{% else %}
+		height: 25px;
+	{% endif %}
+}
+
+.stacktome_additional-score-breakdown{
+	display: flex;
+	flex-direction: column;
+
+	&-item {
+		display: flex;
+		flex-direction: row;
+	}
+}
+
+.stacktome_additional-score-breakdown-item-disabled {
+	color: darkgray;
+}
+
+
+{% if userWidgetConfig.layoutStyle == "trustpilot" or userWidgetConfig.layoutStyle == "style1" %}
+	.rating-grade {
+		font-size: 24px;
+		font-weight: 500;
+		font-family: "Helvetica Neue","Helvetica","Arial","sans-serif";
+		margin: 0 0 12px;
+	}
+
+	.trustpilot-link {
+		border-bottom: 1px solid rgba(25,25,25,.6);
+		font-family: "Helvetica Neue","Helvetica","Arial","sans-serif";
+		font-weight: 500;
+	}
+
+	.review-date {
+		margin-left: 3px;
+		color: #747575;
+		font-weight: lighter;
+	}
+{% endif %}
+
+
+		.stacktome_slider-body {
+			display: flex;
+			justify-content: start;
+			flex-direction: row;
+		}
+
+		.stacktome_reviews-list {
+			margin: 0 auto;
+			padding: 10px;
+			display: flex;
+			justify-content: start;
+			align-items: start;
+			transition: all .5s ease-out;
+			transform: translate(0px)
+		}
+
+		.stacktome_review-additional {
+			width: 100%;
+			flex-direction: row;
+			display: flex;
+			justify-content: space-between;
+			color: rgba(0, 0, 0, 0.5);
+		}
+
+		.stacktome_review-additional .stacktome_source {
+			margin-right: 24px !important;
+		}
+
+		.stacktome_review-header {
+			display: flex;
+			align-items: start;
+			flex-direction: column;
+			justify-content: space-around;
+		}
+
+		.stacktome_review-element-wrapper {
+			flex: 0 0 240px;
+			margin-right: 15px;
+		}
+
+		.stacktome_review-element {
+			{% if userWidgetConfig.layoutStyle == "unstyled" %}
+				box-shadow: 0px 2px 9px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+			{% endif %}
+
+			display: flex;
+			-webkit-box-orient: vertical;
+			-webkit-box-direction: normal;
+			flex-direction: column;
+			transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+			position: relative;
+			padding: 10px;
+			border-radius: 4px;
+		}
+
+		.stacktome_review-text {
+			white-space: normal !important;
+
+			{% if userWidgetConfig.layoutStyle == "trustpilot" or userWidgetConfig.layoutStyle == "style1" %}
+				font-size: 13px;
+				margin-bottom: 6px !important;
+				margin-top: 0;
+				font-family: "Helvetica Neue","Helvetica","Arial","sans-serif";
+			{% else %}
+				margin-top: 4px;
+			{% endif %}
+		}
+
+		.stacktome_slider-wrapper {
+			width: 100%;
+
+			{% if userWidgetConfig.layoutStyle == "unstyled" %}
+				max-width: calc(640px + 22px);
+			{% endif %}
+			overflow: hidden;
+		}
+
+		.stacktome_review-title {
+			max-width: 300px;
+			white-space: break-spaces;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: block;
+
+			{% if userWidgetConfig.layoutStyle == "trustpilot" or userWidgetConfig.layoutStyle == "style1" %}
+				margin-bottom: 6px;
+				font-size: 14px;
+				font-weight: 700;
+				font-family: "Helvetica Neue","Helvetica","Arial","sans-serif";
+			{% else %}
+				margin-bottom: 8px;
+				font-size: 26px;
+			{% endif %}
+		}
+
+		.stacktome_body-link {
+			color: black;
+			text-decoration: none;
+		}
+		
+		.stacktome_review-body {
+			display: flex;
+			-webkit-box-flex: 1;
+			flex-direction: column;
+			align-items: start;
+			justify-content: center;
+			box-sizing: border-box;
+			flex-grow: 1;
+			overflow: auto;
+			font-size: 14px;
+
+			{% if userWidgetConfig.layoutStyle == "unstyled" %}
+				margin-bottom: 16px;
+			{% endif %}
+		}
+
+		.stacktome_review-footer {
+			place-content: stretch flex-end;
+			align-items: stretch;
+			flex-direction: row;
+			display: flex;
+			padding-bottom: 0;
+			padding: 8px 0 0 0;
+		}
+
+		.stacktome_navigation-wrapper {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			cursor: pointer;
+		}
+
+		.stacktome_show-more-label {
+			align-self: center;
+			cursor: pointer;
+		}
+
+		{% if userWidgetConfig.layoutStyle == "trustpilot" or userWidgetConfig.layoutStyle == "style1" %}
+			{% case ceil_summary_rating  %}
+				{% when 1 %}
+					{% assign color_base_on_star = '#dc3e29' %}
+				{% when 2 %}
+					{% assign color_base_on_star = '#e38831' %}
+				{% when 3 %}
+					{% assign color_base_on_star = '#f1ce31' %}
+				{% when 4 %}
+					{% assign color_base_on_star = '#96ce33' %}
+				{% when 5 %}
+					{% assign color_base_on_star = '#00b57a' %}
+			{% endcase %}
+
+			.stacktome_slider-wrapper {
+				/* TRUSTPILOT_CSS_TO_CHANGE */
+				/* /TRUSTPILOT_CSS_TO_CHANGE */
+			}
+
+
+			{% for star in (1..5) %}
+				{% if star <= floor_summary_rating %}
+					.tp-star-container{{ star }} {
+						fill: {{ color_base_on_star }};
+					}
+
+					.tp-star-half{{ star }} {
+						fill: {{ color_base_on_star }};
+					}
+				{% endif %}
+
+				{% if star == ceil_summary_rating %}
+					{% if fill_percentage != 0 %}
+						.tp-star-half{{ star }} {
+							fill: {{ color_base_on_star }};
+						}
+					{% endif %}
+
+					{% if fill_percentage >= 80 %}
+						.tp-star-container{{ star }} {
+							fill: {{ color_base_on_star }};
+						}
+					{% endif %}
+				{% endif %}
+			{% endfor %}
+
+			.stacktome_time {
+				margin-left: 3px;
+				font-weight: 400;
+			}
+
+			.label-wrapper {
+				display: flex;
+				flex-direction: row;
+				margin-top: 2px;
+				margin-left: 8px;
+				font-size: 13px;
+				color: #6c6c85;
+				font-family: "Helvetica Neue","Helvetica","Arial","sans-serif";
+			}
+
+			.label-icon {
+				width: 14px;
+				margin: 0 4px 2px auto;
+			}
+
+			.svg-slider-arrow {
+				display: block;
+				left: 50%;
+				position: absolute;
+				top: 50%;
+				width: 24px;
+			}
+
+			.tp-widget-review-prev {
+				cursor: pointer;
+				height: 100%;
+				position: relative;
+				width: 40px;
+				z-index: 10;
+			}
+
+			.tp-widget-review-prev .svg-slider-arrow {
+				transform: translate(-50%, -50%);
+			}
+
+			.tp-widget-review-next {
+				cursor: pointer;
+				height: 100%;
+				position: relative;
+				width: 40px;
+				z-index: 10;
+			}
+
+			.tp-widget-review-next .svg-slider-arrow {
+				transform: translate(-50%, -50%) rotate(180deg);
+			}
+		{% endif %}
+
+		/* CSS_REPLACE */
+		{% for review in reviews %}
+			#stacktome #stacktome{{review.review_id}} > input {
+				opacity: 0;
+				position: absolute;
+				pointer-events: none;
+			}
+				
+			#stacktome #stacktome{{review.review_id}} > p:nth-child(3) {
+				display: none;
+			}
+				
+			#stacktome #stacktome{{review.review_id}} > input:checked ~ p:nth-child(3) {
+				display: block;
+			}
+
+			#stacktome #stacktome{{review.review_id}} > input:checked ~ p:nth-child(2) {
+				display: none;
+			}
+				
+			#stacktome #stacktome{{review.review_id}} > input:checked ~ label > span {
+				display: none;
+			}
+				
+			#stacktome #stacktome{{review.review_id}} > input:checked ~ label:after {
+				content: '{{ languageData.reviewCard.showLess }}';
+			}
+		{% endfor %}
+		/* /CSS_REPLACE */
+
+		{{ userWidgetConfig.styles.customCss }}
+	</style>
+
+	<svg xmlns="http://www.w3.org/2000/svg" display="none">
+		<symbol id="star" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
+			<g>
+				<rect fill="none" x="0"/>
+				<polygon points="14.43,10 12,2 9.57,10 2,10 8.18,14.41 5.83,22 12,17.31 18.18,22 15.83,14.41 22,10"/>
+			</g>
+		</symbol>
+		<symbol id="stacktome_arrow_back" viewBox="0 0 24 24">
+			<path d="M0 0h24v24H0z" fill="none"/><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+		</symbol>
+		<symbol id="stacktome_arrow_forward" viewBox="0 0 24 24">
+			<path d="M0 0h24v24H0z" fill="none"/><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+		</symbol>
+	</svg>
+
+	<div id='stacktome'>
+		<div class='stacktome_body custom-body'>
+			{% if userWidgetConfig.content.widgetContent.value contains "summary" %}
+				{%  unless userWidgetConfig.content.widgetContent.value contains "product" %}
+					{% assign feefo_image_url = 'https://cdn.stacktome.com/frontend/widget/staging/feefo.png' %}
+{% assign trustpilot_image_url = 'https://cdn.stacktome.com/frontend/widget/staging/trustpilot.png' %}
+{% assign google_image_url = 'https://cdn.stacktome.com/frontend/widget/staging/google.png' %}
+{% assign empty_stars = 5 | minus: floor_summary_rating | minus: 1 %}
+
+<div class='stacktome_total-info custom-total-info' itemscope itemtype="http://schema.org/AggregateRating">
+	{% if userWidgetConfig.layoutStyle == "unstyled" %}
+		<div class='stacktome_total-info-header custom-font-color custom-total-info-header' itemprop='ratingExplanation'>{{ languageData.totalInfoTemplate.averageRating }}</div>
+	{% endif %}
+
+	<div class='stacktome_total-info-body custom-total-info-body'>
+		{% if userWidgetConfig.reviews.shownElements.rating == true %}
+			{% if userWidgetConfig.layoutStyle == "unstyled" %}
+				<div class='stacktome_total-info-body-text custom-font-color custom-total-info-body-rating' itemprop='ratingValue'>{{ summary_rating | round: 2 }}</div>
+
+				<div class="stacktome_review-stars stacktome_total-stars custom-total-stars">
+					{% for star in (1..floor_summary_rating) %}
+						<svg viewBox="0 0 60 60" class="stacktome_total-icons custom-icon-color custom-total-star">
+							<use xlink:href="#star" />
+						</svg>
+					{% endfor %}
+
+					{% if fill_percentage > 0 %}
+						<span class='stacktome_total-icons-part'>
+							<svg viewBox="0 0 60 60" class="stacktome_total-icons custom-icon-color custom-total-star">
+								<use xlink:href="#star" />
+							</svg>
+						</span>
+
+						{% for star in (1..empty_stars) %}
+							<svg viewBox="0 0 60 60" class="stacktome_total-icons empty-stars">
+								<use xlink:href="#star" />
+							</svg>
+						{% endfor %}
+					{% endif %}
+				</div>
+			{% endif %}
+
+			{% if userWidgetConfig.layoutStyle == "trustpilot" %}
+				{% case ceil_summary_rating  %}
+					{% when 1 %}
+						<div class="rating-grade">{{ languageData.common.ratings.bad }}</div>
+					{% when 2 %}
+						<div class="rating-grade">{{ languageData.common.ratings.poor }}</div>
+					{% when 3 %}
+						<div class="rating-grade">{{ languageData.common.ratings.average }}</div>
+					{% when 4 %}
+						<div class="rating-grade">{{ languageData.common.ratings.good }}</div>
+					{% when 5 %}
+						<div class="rating-grade">{{ languageData.common.ratings.excellent }}</div>
+				{% endcase %}
+
+				<div style="position: relative; width: 162px; margin-left: 5px; padding-bottom: 18.326693227091635%;">
+					<svg viewBox="0 0 251 46" style="position: absolute; height: 100%; width: 100%; left: 0; top: 0;">
+						<title>{{ summary_rating | round: 2 }} {{ languageData.common.tooltip }} </title>
+						<g>
+							<path class="tp-star-container1" fill="#dcdce6" d="M0 46.330002h46.375586V0H0z"></path>
+							<path d="M39.533936 19.711433L13.230239 38.80065l3.838216-11.797827L7.02115 19.711433h12.418975l3.837417-11.798624 3.837418 11.798624h12.418975zM23.2785 31.510075l7.183595-1.509576 2.862114 8.800152L23.2785 31.510075z" fill="#FFF"></path>
+						</g>
+						<g>
+							<path class="tp-star-container2" fill="#dcdce6" d="M51.24816 46.330002h46.375587V0H51.248161z"></path>
+							<path class="tp-star-half2" fill="#dcdce6" d="M51.24816 46.330002h23.187793V0H51.248161z"></path>
+							<path d="M74.990978 31.32991L81.150908 30 84 39l-9.660206-7.202786L64.30279 39l3.895636-11.840666L58 19.841466h12.605577L74.499595 8l3.895637 11.841466H91L74.990978 31.329909z" fill="#FFF"></path>
+						</g>
+						<g>
+							<path class="tp-star-container3" fill="#dcdce6" d="M102.532209 46.330002h46.375586V0h-46.375586z"></path>
+							<path class="tp-star-half3" fill="#dcdce6" d="M102.532209 46.330002h23.187793V0h-23.187793z"></path>
+							<path d="M142.066994 19.711433L115.763298 38.80065l3.838215-11.797827-10.047304-7.291391h12.418975l3.837418-11.798624 3.837417 11.798624h12.418975zM125.81156 31.510075l7.183595-1.509576 2.862113 8.800152-10.045708-7.290576z" fill="#FFF"></path>
+						</g>
+						<g>
+							<path class="tp-star-container4" fill="#dcdce6" d="M153.815458 46.330002h46.375586V0h-46.375586z"></path>
+							<path class="tp-star-half4" fill="#dcdce6" d="M153.815458 46.330002h23.187793V0h-23.187793z"></path>
+							<path d="M193.348355 19.711433L167.045457 38.80065l3.837417-11.797827-10.047303-7.291391h12.418974l3.837418-11.798624 3.837418 11.798624h12.418974zM177.09292 31.510075l7.183595-1.509576 2.862114 8.800152-10.045709-7.290576z" fill="#FFF"></path>
+						</g>
+						<g>
+							<path class="tp-star-container5" fill="#dcdce6" d="M205.064416 46.330002h46.375587V0h-46.375587z"></path>
+							<path class="tp-star-half5" fill="#dcdce6" d="M205.064416 46.330002h23.187793V0h-23.187793z"></path>
+							<path d="M244.597022 19.711433l-26.3029 19.089218 3.837419-11.797827-10.047304-7.291391h12.418974l3.837418-11.798624 3.837418 11.798624h12.418975zm-16.255436 11.798642l7.183595-1.509576 2.862114 8.800152-10.045709-7.290576z" fill="#FFF"></path>
+						</g>
+					</svg>
+				</div>
+			{% endif %}
+
+			{% if userWidgetConfig.layoutStyle == "style1" %}
+				{% case ceil_summary_rating  %}
+					{% when 1 %}
+						<div class="rating-grade">{{ languageData.common.ratings.bad }}</div>
+					{% when 2 %}
+						<div class="rating-grade">{{ languageData.common.ratings.poor }}</div>
+					{% when 3 %}
+						<div class="rating-grade">{{ languageData.common.ratings.average }}</div>
+					{% when 4 %}
+						<div class="rating-grade">{{ languageData.common.ratings.good }}</div>
+					{% when 5 %}
+						<div class="rating-grade">{{ languageData.common.ratings.excellent }}</div>
+				{% endcase %}
+
+				{% if userWidgetConfig.styles.starShape == "shape1" %}
+					<div style="display: flex;">
+						<svg height="15px" width="15px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+							<defs>
+								<linearGradient id="grad1-total-info-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}}">
+									<stop offset="100%" stop-color="{{ userWidgetConfig.styles.starColor }}"></stop>
+									<stop offset="0%" stop-color="#dddddd"></stop>
+								</linearGradient>
+							</defs>
+							<path fill="url(#grad1-total-info-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}})" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956C22.602,0.567,25.338,0.567,26.285,2.486z"></path>
+           			 	</svg>
+						<svg height="15px" width="15px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+							<defs>
+								<linearGradient id="grad2-total-info-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}}">
+									<stop offset="{% if summary_rating >= 2 %} 100% {% elsif summary_rating > 1 and summary_rating < 2 %} {{ fill_percentage }}% {% else %} 0% {% endif %}" stop-color="{{ userWidgetConfig.styles.starColor }}"></stop>
+									<stop offset="0%" stop-color="#dddddd"></stop>
+								</linearGradient>
+							</defs>
+							<path fill="url(#grad2-total-info-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}})" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956C22.602,0.567,25.338,0.567,26.285,2.486z"></path>
+						</svg>
+						<svg height="15px" width="15px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+							<defs>
+								<linearGradient id="grad3-total-info-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}}">
+									<stop offset="{% if summary_rating >= 3 %} 100% {% elsif summary_rating > 2 and summary_rating < 3 %} {{ fill_percentage }}% {% else %} 0% {% endif %}" stop-color="{{ userWidgetConfig.styles.starColor }}"></stop>
+									<stop offset="0%" stop-color="#dddddd"></stop>
+								</linearGradient>
+							</defs>
+							<path fill="url(#grad3-total-info-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}})" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956C22.602,0.567,25.338,0.567,26.285,2.486z"></path>
+						</svg>
+						<svg height="15px" width="15px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+							<defs>
+								<linearGradient id="grad4-total-info-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}}">
+									<stop offset="{% if summary_rating >= 4 %} 100% {% elsif summary_rating > 3 and summary_rating < 4 %} {{ fill_percentage }}% {% else %} 0% {% endif %}" stop-color="{{ userWidgetConfig.styles.starColor }}"></stop>
+									<stop offset="0%" stop-color="#dddddd"></stop>
+								</linearGradient>
+							</defs>
+							<path fill="url(#grad4-total-info-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}})" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956C22.602,0.567,25.338,0.567,26.285,2.486z"></path>
+						</svg>
+						<svg height="15px" width="15px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+							<defs>
+								<linearGradient id="grad5-total-info-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}}">
+									<stop offset="{% if summary_rating == 5 %} 100% {% elsif summary_rating > 4 and summary_rating < 5 %} {{ fill_percentage }}% {% else %} 0% {% endif %}" stop-color="{{ userWidgetConfig.styles.starColor }}"></stop>
+									<stop offset="0%" stop-color="#dddddd"></stop>
+								</linearGradient>
+							</defs>
+							<path fill="url(#grad5-total-info-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}})" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956C22.602,0.567,25.338,0.567,26.285,2.486z"></path>
+						</svg>
+					</div>
+				{% endif %}
+
+				{% if userWidgetConfig.styles.starShape == "shape2" %}
+					<div style="display: flex; flex-direction: row;">
+						<div style="margin-right: 3px;">
+							<svg width="20" height="20" viewBox="0 0 20 20">
+								<path fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z"></path>
+								<path fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z"></path>
+								<path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+							</svg>
+						</div>
+						<div style="margin-right: 3px;">
+							<svg width="20" height="20" viewBox="0 0 20 20">
+								<path {% if summary_rating > 1 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z"></path>
+								<path {% if summary_rating >= 1.8 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z"></path>
+								<path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+							</svg>
+						</div>
+						<div style="margin-right: 3px;">
+							<svg width="20" height="20" viewBox="0 0 20 20">
+								<path {% if summary_rating > 2 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z"></path>
+								<path {% if summary_rating >= 2.8 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z"></path>
+								<path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+							</svg>
+						</div>
+						<div style="margin-right: 3px;">
+							<svg width="20" height="20" viewBox="0 0 20 20">
+								<path {% if summary_rating > 3 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z"></path>
+								<path {% if summary_rating >= 3.8 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z"></path>
+								<path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+							</svg>
+						</div>
+						<div>
+							<svg width="20" height="20" viewBox="0 0 20 20">
+								<path {% if summary_rating > 4 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z"></path>
+								<path {% if summary_rating >= 4.8 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z"></path>
+								<path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+							</svg>
+						</div>
+					</div>
+				{% endif %}
+
+				{% if userWidgetConfig.styles.starShape == "shape3" %}
+					<div style="position: relative;">
+						<div>
+							<figure style="display: flex; flex-direction: row; margin: 0;">
+                                    <span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="#CCC" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+								<span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="#CCC" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+								<span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="#CCC" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+								<span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="#CCC" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+								<span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="#CCC" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+							</figure>
+						</div>
+						<div style="overflow: hidden; position: absolute; top: 0px; left: 0px; width: {{ summary_rating | times: 100 | divided_by: 5 }}%;">
+							<figure style="display: flex; flex-direction: row; margin: 0;">
+                                    <span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="{{ userWidgetConfig.styles.starColor }}" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+								<span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="{{ userWidgetConfig.styles.starColor }}" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+								<span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="{{ userWidgetConfig.styles.starColor }}" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+								<span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="{{ userWidgetConfig.styles.starColor }}" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+								<span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="{{ userWidgetConfig.styles.starColor }}" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+							</figure>
+						</div>
+					</div>
+				{% endif %}
+			{% endif %}
+		{% endif %}	
+	</div>
+
+	{% if userWidgetConfig.layoutStyle == "trustpilot" or userWidgetConfig.layoutStyle == "style1" %}
+		{% if userWidgetConfig.reviews.shownElements.reviewCount %}
+			<p class='stacktome_total-info-total-reviews custom-total-info-total-reviews'>
+				<a itemprop='reviewCount' {% if userWidgetConfig.reviews.linkToReviewCount.size > 5 %} href="{{ userWidgetConfig.reviews.linkToReviewCount }}" target="_blank" {% endif %} style="color: #191919; text-decoration: none;">
+					{{ languageData.totalInfoTemplate.reviewCountTrustpilotStart }}
+					<strong class="trustpilot-link">{{ summary_count }} {{ languageData.totalInfoTemplate.reviewCountTrustpilotEnd }}</strong>
+				</a>
+			</p>
+		{% endif %}
+
+	{% else %}
+		{% if userWidgetConfig.reviews.shownElements.reviewCount %}
+			<p class='stacktome_total-info-total-reviews custom-total-info-total-reviews'>
+				<span itemprop='reviewCount'>{{ summary_count }}</span>
+				{{ languageData.totalInfoTemplate.reviews }}
+			</p>
+		{% endif %}
+	{% endif %}
+
+	{%  assign summary_source_length = review_source | size %}
+	{% if summary_source_length > 0 %}
+	<div class="stacktome_total-info-source custom-total-info-source">
+		<span>
+			{% if userWidgetConfig.reviews.shownElements.source %}
+				{% case review_source  %}
+					{% when 'feefo' %}
+						<img src={{ feefo_image_url }}></img>
+					{% when 'trustpilot' %}
+					<img src={{ trustpilot_image_url }}></img>
+					{% when 'google_business' %}
+					<img src={{ google_image_url }}></img>
+				{% endcase %}
+			{% endif %}
+		</span>
+	</div>
+	{% endif %}
+</div>
+
+				{% endunless %}
+			{% endif %}
+
+			{% if userWidgetConfig.content.widgetContent.value contains "wordcloud" %}
+				<div class='stacktome_wordcloud'></div>
+			{% endif %}
+
+			{% if userWidgetConfig.content.widgetContent.value contains "product" %}
+				{% assign unprocessed_stars = 5 | minus: ceil_summary_rating %}
+
+<div class="stacktome_review-stars-for-product-card">
+    {% if summary_count and summary_count >= 1 %}
+        {% if userWidgetConfig.layoutStyle == "unstyled" %}
+            {% for star in (1..floor_summary_rating) %}
+                <svg viewBox="0 0 60 60" class="stacktome_additional-icons custom-icon-color">
+                    <use xlink:href="#star"/>
+                </svg>
+            {% endfor %}
+
+            {% if fill_percentage > 0 %}
+                <svg viewBox="0 0 60 60" class="stacktome_additional-icons custom-icon-color">
+                    <defs>
+                        <linearGradient id="grad">
+                            <stop offset="{{ fill_percentage }}%"
+                                  stop-color="{{ userWidgetConfig.styles.textColor }}"/>
+                            <stop offset="{{ fill_percentage }}%"
+                                  stop-color="lightgrey"/>
+                        </linearGradient>
+                    </defs>
+                    <use fill="url(#grad)" xlink:href="#star"/>
+                </svg>
+            {% endif %}
+
+            {% if ceil_summary_rating < 5 %}
+                {% for star in (1..unprocessed_stars) %}
+                    <svg viewBox="0 0 60 60" class="stacktome_additional-icons">
+                        <defs>
+                            <linearGradient id="grad-2">
+                                <stop offset="100%"
+                                      stop-color="lightgrey"/>
+                            </linearGradient>
+                        </defs>
+                        <use fill="url(#grad-2)" xlink:href="#star"/>
+                    </svg>
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+
+        {% if userWidgetConfig.layoutStyle == "trustpilot" %}
+            <div style="position: relative; width: 100px; margin-left: 5px; padding-bottom: 18.326693227091635%;">
+                <svg viewBox="0 0 251 46" style="display: block; position: absolute; height: 100%; width: 100%; left: 0; top: 0;">
+                    <title>{{ summary_rating | round: 2 }} out of five star rating on Trustpilot</title>
+                    <g>
+                        <path class="tp-star-container1" fill="#dcdce6" d="M0 46.330002h46.375586V0H0z"></path>
+                        <path d="M39.533936 19.711433L13.230239 38.80065l3.838216-11.797827L7.02115 19.711433h12.418975l3.837417-11.798624 3.837418 11.798624h12.418975zM23.2785 31.510075l7.183595-1.509576 2.862114 8.800152L23.2785 31.510075z" fill="#FFF"></path>
+                    </g>
+                    <g>
+                        <path class="tp-star-container2" fill="#dcdce6" d="M51.24816 46.330002h46.375587V0H51.248161z"></path>
+                        <path class="tp-star-half2" fill="#dcdce6" d="M51.24816 46.330002h23.187793V0H51.248161z"></path>
+                        <path d="M74.990978 31.32991L81.150908 30 84 39l-9.660206-7.202786L64.30279 39l3.895636-11.840666L58 19.841466h12.605577L74.499595 8l3.895637 11.841466H91L74.990978 31.329909z" fill="#FFF"></path>
+                    </g>
+                    <g>
+                        <path class="tp-star-container3" fill="#dcdce6" d="M102.532209 46.330002h46.375586V0h-46.375586z"></path>
+                        <path class="tp-star-half3" fill="#dcdce6" d="M102.532209 46.330002h23.187793V0h-23.187793z"></path>
+                        <path d="M142.066994 19.711433L115.763298 38.80065l3.838215-11.797827-10.047304-7.291391h12.418975l3.837418-11.798624 3.837417 11.798624h12.418975zM125.81156 31.510075l7.183595-1.509576 2.862113 8.800152-10.045708-7.290576z" fill="#FFF"></path>
+                    </g>
+                    <g>
+                        <path class="tp-star-container4" fill="#dcdce6" d="M153.815458 46.330002h46.375586V0h-46.375586z"></path>
+                        <path class="tp-star-half4" fill="#dcdce6" d="M153.815458 46.330002h23.187793V0h-23.187793z"></path>
+                        <path d="M193.348355 19.711433L167.045457 38.80065l3.837417-11.797827-10.047303-7.291391h12.418974l3.837418-11.798624 3.837418 11.798624h12.418974zM177.09292 31.510075l7.183595-1.509576 2.862114 8.800152-10.045709-7.290576z" fill="#FFF"></path>
+                    </g>
+                    <g>
+                        <path class="tp-star-container5" fill="#dcdce6" d="M205.064416 46.330002h46.375587V0h-46.375587z"></path>
+                        <path class="tp-star-half5" fill="#dcdce6" d="M205.064416 46.330002h23.187793V0h-23.187793z"></path>
+                        <path d="M244.597022 19.711433l-26.3029 19.089218 3.837419-11.797827-10.047304-7.291391h12.418974l3.837418-11.798624 3.837418 11.798624h12.418975zm-16.255436 11.798642l7.183595-1.509576 2.862114 8.800152-10.045709-7.290576z" fill="#FFF"></path>
+                    </g>
+                </svg>
+            </div>
+        {% endif %}
+
+        {% if userWidgetConfig.layoutStyle == "style1" %}
+            {% if userWidgetConfig.styles.starShape == "shape1" %}
+                <div style="display: flex;">
+                    <svg height="15px" width="15px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+                    <defs>
+                        <linearGradient id="grad1-product-rating-support-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}}">
+                            <stop offset="100%" stop-color="{{ userWidgetConfig.styles.starColor }}"></stop>
+                            <stop offset="0%" stop-color="#dddddd"></stop>
+                        </linearGradient>
+                    </defs>
+                        <path fill="url(#grad1-product-rating-support-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}})" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956C22.602,0.567,25.338,0.567,26.285,2.486z"></path>
+                </svg>
+                    <svg height="15px" width="15px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+                    <defs>
+                        <linearGradient id="grad2-product-rating-support-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}}">
+                            <stop offset="{% if summary_rating >= 2 %} 100% {% elsif summary_rating > 1 and summary_rating < 2 %} {{ fill_percentage }}% {% else %} 0% {% endif %}" stop-color="{{ userWidgetConfig.styles.starColor }}"></stop>
+                            <stop offset="0%" stop-color="#dddddd"></stop>
+                        </linearGradient>
+                    </defs>
+                        <path fill="url(#grad2-product-rating-support-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}})" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956C22.602,0.567,25.338,0.567,26.285,2.486z"></path>
+                </svg>
+                    <svg height="15px" width="15px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+                    <defs>
+                        <linearGradient id="grad3-product-rating-support-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}}">
+                            <stop offset="{% if summary_rating >= 3 %} 100% {% elsif summary_rating > 2 and summary_rating < 3 %} {{ fill_percentage }}% {% else %} 0% {% endif %}" stop-color="{{ userWidgetConfig.styles.starColor }}"></stop>
+                            <stop offset="0%" stop-color="#dddddd"></stop>
+                        </linearGradient>
+                    </defs>
+                        <path fill="url(#grad3-product-rating-support-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}})" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956C22.602,0.567,25.338,0.567,26.285,2.486z"></path>
+                </svg>
+                    <svg height="15px" width="15px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+                    <defs>
+                        <linearGradient id="grad4-product-rating-support-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}}">
+                            <stop offset="{% if summary_rating >= 4 %} 100% {% elsif summary_rating > 3 and summary_rating < 4 %} {{ fill_percentage }}% {% else %} 0% {% endif %}" stop-color="{{ userWidgetConfig.styles.starColor }}"></stop>
+                            <stop offset="0%" stop-color="#dddddd"></stop>
+                        </linearGradient>
+                    </defs>
+                        <path fill="url(#grad4-product-rating-support-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}})" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956C22.602,0.567,25.338,0.567,26.285,2.486z"></path>
+                </svg>
+                    <svg height="15px" width="15px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+                    <defs>
+                        <linearGradient id="grad5-product-rating-support-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}}">
+                            <stop offset="{% if summary_rating == 5 %} 100% {% elsif summary_rating > 4 and summary_rating < 5 %} {{ fill_percentage }}% {% else %} 0% {% endif %}" stop-color="{{ userWidgetConfig.styles.starColor }}"></stop>
+                            <stop offset="0%" stop-color="#dddddd"></stop>
+                        </linearGradient>
+                    </defs>
+                        <path fill="url(#grad5-product-rating-support-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ userWidgetConfig.layout | replace: ' ', '_'}})" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956C22.602,0.567,25.338,0.567,26.285,2.486z"></path>
+                </svg>
+                </div>
+            {% endif %}
+
+
+            {% if userWidgetConfig.styles.starShape == "shape2" %}
+                <div style="display: flex; flex-direction: row;">
+                    <div style="margin-right: 3px;">
+                        <svg width="20" height="20" viewBox="0 0 20 20">
+                            <path fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z"></path>
+                            <path fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z"></path>
+                            <path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+                        </svg>
+                    </div>
+                    <div style="margin-right: 3px;">
+                        <svg width="20" height="20" viewBox="0 0 20 20">
+                            <path {% if summary_rating > 1 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z"></path>
+                            <path {% if summary_rating >= 1.8 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z"></path>
+                            <path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+                        </svg>
+                    </div>
+                    <div style="margin-right: 3px;">
+                        <svg width="20" height="20" viewBox="0 0 20 20">
+                            <path {% if summary_rating > 2 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z"></path>
+                            <path {% if summary_rating >= 2.8 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z"></path>
+                            <path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+                        </svg>
+                    </div>
+                    <div style="margin-right: 3px;">
+                        <svg width="20" height="20" viewBox="0 0 20 20">
+                            <path {% if summary_rating > 3 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z"></path>
+                            <path {% if summary_rating >= 3.8 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z"></path>
+                            <path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <svg width="20" height="20" viewBox="0 0 20 20">
+                            <path {% if summary_rating > 4 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z"></path>
+                            <path {% if summary_rating >= 4.8 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z"></path>
+                            <path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+                        </svg>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if userWidgetConfig.styles.starShape == "shape3" %}
+                <div style="position: relative;">
+                    <div>
+                        <figure style="display: flex; flex-direction: row; margin: 0;">
+                        <span>
+                            <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" fill="#CCC" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                            </svg>
+                        </span>
+                            <span>
+                            <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" fill="#CCC" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                            </svg>
+                        </span>
+                            <span>
+                            <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" fill="#CCC" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                            </svg>
+                        </span>
+                            <span>
+                            <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" fill="#CCC" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                            </svg>
+                        </span>
+                            <span>
+                            <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" fill="#CCC" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                            </svg>
+                        </span>
+                        </figure>
+                    </div>
+                    <div style="overflow: hidden; position: absolute; top: 0px; left: 0px; width: {{ summary_rating | times: 100 | divided_by: 5 }}%;">
+                        <figure style="display: flex; flex-direction: row; margin: 0;">
+                        <span>
+                            <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" fill="{{ userWidgetConfig.styles.starColor }}" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                            </svg>
+                        </span>
+                            <span>
+                            <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" fill="{{ userWidgetConfig.styles.starColor }}" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                            </svg>
+                        </span>
+                            <span>
+                            <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" fill="{{ userWidgetConfig.styles.starColor }}" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                            </svg>
+                        </span>
+                            <span>
+                            <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" fill="{{ userWidgetConfig.styles.starColor }}" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                            </svg>
+                        </span>
+                            <span>
+                            <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" fill="{{ userWidgetConfig.styles.starColor }}" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                            </svg>
+                        </span>
+                        </figure>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <div class="stacktome_additional-info-review-count">
+            {% if summary_count > 1 %}
+                {{ summary_count }} {{ languageData.common.reviews }}
+            {% else %}
+                {{ summary_count }} {{ languageData.common.review }}
+            {% endif %}
+        </div>
+		{% if summary_count > 0 %}
+		{% endif %}
+
+    {% else %}
+        {{ userWidgetConfig.reviews.noReviewHTML }}
+    {% endif %}
+</div>
+
+			{% endif %}
+
+		    <!-- REVIEWS_LIST -->
+			{% if userWidgetConfig.content.widgetContent.value contains "reviews" %}
+				<div class='stacktome-reviews-wrapper'>
+					<div class="stacktome_slider-body custom-slider-body">
+						{% if reviews.size > 0 %}
+							<div  class='stacktome_back-button stacktome_navigation-wrapper custom-navigatin-wrapper'>
+								{% if userWidgetConfig.layoutStyle == "unstyled" %}
+									<svg viewBox="0 0 24 24" width='50px' class="custom-icon-color custom-navigation-icon">
+										<use xlink:href="#stacktome_arrow_back" />
+									</svg>
+								{% endif %}
+
+								{% if userWidgetConfig.layoutStyle == "trustpilot" or userWidgetConfig.layoutStyle == "style1" %}
+									<div class="tp-widget-review-prev">
+										<div class="svg-slider-arrow">
+											<div style="position: relative; height: 0; width: 100%; padding: 0; padding-bottom: 100%;">
+												<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="position: absolute; height: 100%; width: 100%; left: 0; top: 0;">
+													<circle cx="12" cy="12" r="11.5" fill="none" stroke="#8C8C8C"></circle>
+													<path fill="#8C8C8C" d="M10.5088835 12l3.3080582-3.02451041c.2440777-.22315674.2440777-.5849653 0-.80812204-.2440776-.22315673-.6398058-.22315673-.8838834 0L9.18305826 11.595939c-.24407768.2231567-.24407768.5849653 0 .808122l3.75000004 3.4285714c.2440776.2231568.6398058.2231568.8838834 0 .2440777-.2231567.2440777-.5849653 0-.808122L10.5088835 12z"></path>
+												</svg>
+											</div>
+										</div>
+									</div>
+								{% endif %}
+							</div>
+
+							<div class='stacktome_slider-wrapper custom-slider-wrapper'>
+								<ul class="stacktome_slider stacktome_reviews-list custom-review-list">
+									{% for review in reviews %}
+										<li class="stacktome_review-element-wrapper custom-review-element-wrapper">
+											{% if review %}
+												{% case review.review_rating  %}
+    {% when 1 %}
+        {% assign stars_color = '#dc3e29' %}
+    {% when 2 %}
+        {% assign stars_color = '#e38831' %}
+    {% when 3 %}
+        {% assign stars_color = '#f1ce31' %}
+    {% when 4 %}
+        {% assign stars_color = '#96ce33' %}
+    {% when 5 %}
+        {% assign stars_color = '#00b57a' %}
+{% endcase %}
+{% assign current_month_index = review.created_at | date: '%m' | minus: 1 %}
+
+<div class="stacktome_review-element custom-review-element" itemscope itemtype="http://schema.org/UserReview">
+    <header class="stacktome_review-header custom-review-header">
+        {% if userWidgetConfig.reviews.shownElements.rating == true %}
+            <div itemprop='reviewRating' itemscope itemtype='http://schema.org/Rating' class="stacktome_review-stars custom-review-stars">
+                {% if userWidgetConfig.layoutStyle == "trustpilot" %}
+                    <div style="position: relative; width: 100px; padding-bottom: 18.326693227091635%;">
+                        <svg viewBox="0 0 251 46" style="position: absolute; height: 100%; width: 100%; left: 0; top: 0;">
+                            <title>{{ review.review_rating }} {{ languageData.comon.tooltip }} </title>
+                            <g>
+                                <path fill="#dcdce6" style="{% if review.review_rating >= 1 %} fill: {{ stars_color }}; {% endif %}" d="M0 46.330002h46.375586V0H0z"></path>
+                                <path d="M39.533936 19.711433L13.230239 38.80065l3.838216-11.797827L7.02115 19.711433h12.418975l3.837417-11.798624 3.837418 11.798624h12.418975zM23.2785 31.510075l7.183595-1.509576 2.862114 8.800152L23.2785 31.510075z" fill="#FFF"></path>
+                            </g>
+                            <g>
+                                <path fill="#dcdce6" style="{% if review.review_rating >= 2 %} fill: {{ stars_color }}; {% endif %}" d="M51.24816 46.330002h46.375587V0H51.248161z"></path>
+                                <path d="M74.990978 31.32991L81.150908 30 84 39l-9.660206-7.202786L64.30279 39l3.895636-11.840666L58 19.841466h12.605577L74.499595 8l3.895637 11.841466H91L74.990978 31.329909z" fill="#FFF"></path>
+                            </g>
+                            <g>
+                                <path fill="#dcdce6" style="{% if review.review_rating >= 3 %} fill: {{ stars_color }}; {% endif %}" d="M102.532209 46.330002h46.375586V0h-46.375586z"></path>
+                                <path d="M142.066994 19.711433L115.763298 38.80065l3.838215-11.797827-10.047304-7.291391h12.418975l3.837418-11.798624 3.837417 11.798624h12.418975zM125.81156 31.510075l7.183595-1.509576 2.862113 8.800152-10.045708-7.290576z" fill="#FFF"></path>
+                            </g>
+                            <g>
+                                <path fill="#dcdce6" style="{% if review.review_rating >= 4 %} fill: {{ stars_color }}; {% endif %}" d="M153.815458 46.330002h46.375586V0h-46.375586z"></path>
+                                <path d="M193.348355 19.711433L167.045457 38.80065l3.837417-11.797827-10.047303-7.291391h12.418974l3.837418-11.798624 3.837418 11.798624h12.418974zM177.09292 31.510075l7.183595-1.509576 2.862114 8.800152-10.045709-7.290576z" fill="#FFF"></path>
+                            </g>
+                            <g>
+                                <path fill="#dcdce6" style="{% if review.review_rating == 5 %} fill: {{ stars_color }}; {% endif %}" d="M205.064416 46.330002h46.375587V0h-46.375587z"></path>
+                                <path d="M244.597022 19.711433l-26.3029 19.089218 3.837419-11.797827-10.047304-7.291391h12.418974l3.837418-11.798624 3.837418 11.798624h12.418975zm-16.255436 11.798642l7.183595-1.509576 2.862114 8.800152-10.045709-7.290576z" fill="#FFF"></path>
+                            </g>
+                        </svg>
+                    </div>
+                {% endif %}
+
+
+                {% if userWidgetConfig.layoutStyle == "style1" %}
+                {% if userWidgetConfig.styles.starShape == "shape1" %}
+                    <div style="display: flex;">
+                        <svg height="15px" width="15px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+                            <defs>
+                                <linearGradient id="grad1-card-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ review.review_id }}-{{ userWidgetConfig.layout | replace: ' ', '_'}}">
+                                    <stop offset="100%" stop-color="{{ userWidgetConfig.styles.starColor }}"></stop>
+                                    <stop offset="0%" stop-color="#dddddd"></stop>
+                                </linearGradient>
+                            </defs>
+                            <path fill="url(#grad1-card-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ review.review_id }}-{{ userWidgetConfig.layout | replace: ' ', '_'}})" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956C22.602,0.567,25.338,0.567,26.285,2.486z"></path>
+                        </svg>
+                        <svg height="15px" width="15px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+                            <defs>
+                                <linearGradient id='grad2-card-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ review.review_id }}-{{ userWidgetConfig.layout | replace: ' ', '_'}}'>
+                                    <stop offset='{% if review.review_rating >= 2 %} 100% {% elsif review.review_rating > 1 and review.review_rating < 2 %} {{ fill_percentage }}% {% else %} 0% {% endif %}' stop-color='{{ userWidgetConfig.styles.starColor }}'></stop>
+                                    <stop offset='0%' stop-color='#dddddd'></stop>
+                                </linearGradient>
+                            </defs>
+                            <path fill="url(#grad2-card-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ review.review_id }}-{{ userWidgetConfig.layout | replace: ' ', '_'}})" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956C22.602,0.567,25.338,0.567,26.285,2.486z"></path>
+                        </svg>
+                        <svg height="15px" width="15px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+                            <defs>
+                                <linearGradient id="grad3-card-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ review.review_id }}-{{ userWidgetConfig.layout | replace: ' ', '_'}}">
+                                    <stop offset="{% if review.review_rating >= 3 %} 100% {% elsif review.review_rating > 2 and review.review_rating < 3 %} {{ fill_percentage }}% {% else %} 0% {% endif %}" stop-color="{{ userWidgetConfig.styles.starColor }}"></stop>
+                                    <stop offset="0%" stop-color="#dddddd"></stop>
+                                </linearGradient>
+                            </defs>
+                            <path fill="url(#grad3-card-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ review.review_id }}-{{ userWidgetConfig.layout | replace: ' ', '_'}})" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956C22.602,0.567,25.338,0.567,26.285,2.486z"></path>
+                        </svg>
+                        <svg height="15px" width="15px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+                            <defs>
+                                <linearGradient id="grad4-card-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ review.review_id }}-{{ userWidgetConfig.layout | replace: ' ', '_'}}">
+                                    <stop offset="{% if review.review_rating >= 4 %} 100% {% elsif review.review_rating > 3 and review.review_rating < 4 %} {{ fill_percentage }}% {% else %} 0% {% endif %}" stop-color="{{ userWidgetConfig.styles.starColor }}"></stop>
+                                    <stop offset="0%" stop-color="#dddddd"></stop>
+                                </linearGradient>
+                            </defs>
+                            <path fill="url(#grad4-card-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ review.review_id }}-{{ userWidgetConfig.layout | replace: ' ', '_'}})" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956C22.602,0.567,25.338,0.567,26.285,2.486z"></path>
+                        </svg>
+                        <svg height="15px" width="15px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+                            <defs>
+                                <linearGradient id="grad5-card-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ review.review_id }}-{{ userWidgetConfig.layout | replace: ' ', '_'}}">
+                                    <stop offset="{% if review.review_rating == 5 %} 100% {% elsif review.review_rating > 4 and review.review_rating < 5 %} {{ fill_percentage }}% {% else %} 0% {% endif %}" stop-color="{{ userWidgetConfig.styles.starColor }}"></stop>
+                                    <stop offset="0%" stop-color="#dddddd"></stop>
+                                </linearGradient>
+                            </defs>
+                            <path fill="url(#grad5-card-{{ userWidgetConfig.content.widgetName | replace: ' ', '_' }}-{{ review.review_id }}-{{ userWidgetConfig.layout | replace: ' ', '_'}})" d="M26.285,2.486l5.407,10.956c0.376,0.762,1.103,1.29,1.944,1.412l12.091,1.757c2.118,0.308,2.963,2.91,1.431,4.403l-8.749,8.528c-0.608,0.593-0.886,1.448-0.742,2.285l2.065,12.042c0.362,2.109-1.852,3.717-3.746,2.722l-10.814-5.685c-0.752-0.395-1.651-0.395-2.403,0l-10.814,5.685c-1.894,0.996-4.108-0.613-3.746-2.722l2.065-12.042c0.144-0.837-0.134-1.692-0.742-2.285l-8.749-8.528c-1.532-1.494-0.687-4.096,1.431-4.403l12.091-1.757c0.841-0.122,1.568-0.65,1.944-1.412l5.407-10.956C22.602,0.567,25.338,0.567,26.285,2.486z"></path>
+                        </svg>
+                    </div>
+                {% endif %}
+
+                    {% if userWidgetConfig.styles.starShape == "shape2" %}
+                        <div style="display: flex; flex-direction: row;">
+                            <div style="margin-right: 3px;">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z"></path>
+                                    <path fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z"></path>
+                                    <path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+                                </svg>
+                            </div>
+                            <div style="margin-right: 3px;">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path {% if review.review_rating > 1 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z"></path>
+                                    <path {% if review.review_rating >= 1.8 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z"></path>
+                                    <path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+                                </svg>
+                            </div>
+                            <div style="margin-right: 3px;">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path {% if review.review_rating > 2 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z"></path>
+                                    <path {% if review.review_rating >= 2.8 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z"></path>
+                                    <path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+                                </svg>
+                            </div>
+                            <div style="margin-right: 3px;">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path {% if review.review_rating > 3 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z"></path>
+                                    <path {% if review.review_rating >= 3.8 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z"></path>
+                                    <path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path {% if review.review_rating > 4 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M0 4C0 1.79086 1.79086 0 4 0H10V20H4C1.79086 20 0 18.2091 0 16V4Z"></path>
+                                    <path {% if review.review_rating >= 4.8 %} fill="{{ userWidgetConfig.styles.starColor }}" opacity="1" {% else %} fill="#BBBAC0" opacity="0.5" {% endif %} d="M20 4C20 1.79086 18.2091 0 16 0H10V20H16C18.2091 20 20 18.2091 20 16V4Z"></path>
+                                    <path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M10 13.3736L12.5949 14.7111C12.7378 14.7848 12.9006 14.8106 13.0593 14.7847C13.4681 14.718 13.7454 14.3325 13.6787 13.9237L13.2085 11.0425L15.2824 8.98796C15.3967 8.8748 15.4715 8.72792 15.4959 8.569C15.5588 8.15958 15.2779 7.77672 14.8685 7.71384L11.983 7.2707L10.6699 4.66338C10.5975 4.51978 10.481 4.40322 10.3374 4.33089C9.96742 4.14458 9.51648 4.29344 9.33017 4.66338L8.01705 7.2707L5.13157 7.71384C4.97265 7.73825 4.82577 7.81309 4.71261 7.92731C4.42109 8.22158 4.42332 8.69645 4.71759 8.98796L6.79152 11.0425L6.32131 13.9237C6.29541 14.0824 6.3212 14.2452 6.39486 14.3881C6.58464 14.7563 7.03696 14.9009 7.40514 14.7111L10 13.3736Z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if userWidgetConfig.styles.starShape == "shape3" %}
+                        <div style="position: relative;">
+                            <div>
+                                <figure style="display: flex; flex-direction: row; margin: 0;">
+                                    <span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="#CCC" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+                                    <span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="#CCC" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+                                    <span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="#CCC" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+                                    <span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="#CCC" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+                                    <span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="#CCC" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+                                </figure>
+                            </div>
+                            <div style="overflow: hidden; position: absolute; top: 0px; left: 0px; width: {{ review.review_rating | times: 100 | divided_by: 5 }}%;">
+                                <figure style="display: flex; flex-direction: row; margin: 0;">
+                                    <span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="{{ userWidgetConfig.styles.starColor }}" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+                                    <span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="{{ userWidgetConfig.styles.starColor }}" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+                                    <span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="{{ userWidgetConfig.styles.starColor }}" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+                                    <span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="{{ userWidgetConfig.styles.starColor }}" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+                                    <span>
+                                        <svg fill="none" width="20" height="20" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                                            <path clip-rule="evenodd" fill="{{ userWidgetConfig.styles.starColor }}" fill-rule="evenodd" d="M7.02697 9.38889l-4.219 3.53831 1.40821-4.98276L0 4.76725l5.07966-.0364L7.02697 0l1.89337 4.73085L14 4.76725 9.83776 7.94444 11.2431 13 7.02697 9.38889z"></path>
+                                        </svg>
+                                    </span>
+                                </figure>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                {% if review.order_id %}
+                    <div class="label-wrapper">
+                        <div class="label-icon">
+                            <div style="position: relative; height: 0; width: 100%; padding: 0; padding-bottom: 100%;">
+                                <svg viewBox="0 0 14 14" fill="none">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                          d="M7 14C10.866 14 14 10.866 14 7C14 3.13401 10.866 0 7 0C3.13401 0 0 3.13401 0 7C0 10.866 3.13401 14 7 14ZM6.09217 7.81401L9.20311 4.7031C9.44874 4.45757 9.84688 4.45757 10.0923 4.7031C10.338 4.94864 10.338 5.34673 10.0923 5.59226L6.62009 9.06448C6.59573 9.10283 6.56682 9.13912 6.53333 9.17256C6.28787 9.41821 5.88965 9.41821 5.64402 9.17256L3.7059 7.11031C3.46046 6.86464 3.46046 6.46669 3.7059 6.22102C3.95154 5.97548 4.34968 5.97548 4.59512 6.22102L6.09217 7.81401Z"
+                                          fill="currentColor"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="label-text">{{ languageData.common.verified }}</div>
+                    </div>
+                {% endif %}
+
+                <meta itemprop="ratingValue" content="{{ review.review_rating }}"/>
+            </div>
+        {% endif %}
+    </header>
+
+    <div>
+        <a {% if userWidgetConfig.reviews.shownElements.linkToReview == true and review.review_link.size > 0 %} href="{{ review.review_link }}" target="_blank" {% endif %} class="stacktome_body-link">
+
+            {% if review.review_heading and userWidgetConfig.reviews.shownElements.reviewTitle == true %}
+                <title itemprop='headline' class="stacktome_review-title custom-font-color custom-review-title">{{ review.review_heading }}</title>
+            {% endif %}
+
+            <div class="stacktome_review-body custom-review-body" id='stacktome{{review.review_id}}'>
+                {% if review.review_text and userWidgetConfig.reviews.shownElements.reviewText == true %}
+
+                    {% assign id = review.review_id %}
+                    <input type="checkbox" id="stacktome_expanded{{ id }}">
+                    <p itemprop='reviewBody' class="custom-font-size custom-font-color stacktome_review-text custom-review-text">{{ review.review_text | truncate: userWidgetConfig.reviews.numOfCharBeforeTruncation, '...' }}</p>
+                    <p class="custom-font-size custom-font-color stacktome_review-text custom-review-text">{{ review.review_text }}</p>
+
+                {% endif %}
+            </div>
+
+
+        </a>
+    </div>
+</div>
+
+											{% endif %}
+										</li>
+									{% endfor %}
+								</ul>
+							</div>
+
+							<div  class='stacktome_forward-button stacktome_navigation-wrapper custom-navigatin-wrapper'>
+								{% if userWidgetConfig.layoutStyle == "unstyled" %}
+									<svg viewBox="0 0 24 24" width='50px' class="custom-icon-color custom-navigation-icon">
+										<use xlink:href="#stacktome_arrow_forward" />
+									</svg>
+								{% endif %}
+
+								{% if userWidgetConfig.layoutStyle == "trustpilot" or userWidgetConfig.layoutStyle == "style1" %}
+									<div class="tp-widget-review-next">
+										<div class="svg-slider-arrow">
+											<div style="position: relative;height: 0;width: 100%;padding: 0;padding-bottom: 100%;">
+												<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="position: absolute; height: 100%; width: 100%; left: 0; top: 0;">
+													<circle cx="12" cy="12" r="11.5" fill="none" stroke="#8C8C8C"></circle>
+													<path fill="#8C8C8C" d="M10.5088835 12l3.3080582-3.02451041c.2440777-.22315674.2440777-.5849653 0-.80812204-.2440776-.22315673-.6398058-.22315673-.8838834 0L9.18305826 11.595939c-.24407768.2231567-.24407768.5849653 0 .808122l3.75000004 3.4285714c.2440776.2231568.6398058.2231568.8838834 0 .2440777-.2231567.2440777-.5849653 0-.808122L10.5088835 12z"></path>
+												</svg>
+											</div>
+										</div>
+									</div>
+								{% endif %}
+							</div>
+						{% endif %}
+					</div>
+				</div>
+			{% endif %}
+			<!-- /REVIEWS_LIST -->
+		</div>
+	</div>
+</div>
 			
 
 		    <!-- REVIEWS_LIST -->
