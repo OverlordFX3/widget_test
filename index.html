@@ -1204,7 +1204,7 @@
 {% endcase %}
 {% assign current_month_index = review.created_at | date: '%m' | minus: 1 %}
 
-<div class="stacktome_review-element custom-review-element" itemscope itemtype="http://schema.org/UserReview">
+<div class="stacktome_review-element custom-review-element">
     <header class="stacktome_review-header custom-review-header">
         {% if userWidgetConfig.reviews.shownElements.rating == true %}
             <div itemprop='reviewRating' itemscope itemtype='http://schema.org/Rating' class="stacktome_review-stars custom-review-stars">
