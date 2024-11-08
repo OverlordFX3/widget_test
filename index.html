@@ -620,7 +620,7 @@
 {% assign google_image_url = 'https://cdn.stacktome.com/frontend/widget/staging/google.png' %}
 {% assign empty_stars = 5 | minus: floor_summary_rating | minus: 1 %}
 
-<div class='stacktome_total-info custom-total-info' itemscope itemtype="http://schema.org/AggregateRating">
+<div class='stacktome_total-info custom-total-info'>
 	{% if userWidgetConfig.layoutStyle == "unstyled" %}
 		<div class='stacktome_total-info-header custom-font-color custom-total-info-header' itemprop='ratingExplanation'>{{ languageData.totalInfoTemplate.averageRating }}</div>
 	{% endif %}
