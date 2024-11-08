@@ -4,10 +4,7 @@
 	<div  class="wrapper-product-title col-sm-12">
 		
 		<h1 itemprop="name" class="h3">Radix Nutrition Original 600 - Grass-Fed Lamb, Mint, and Rosemary</h1>
-                   <div itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
-    <meta itemprop="reviewCount" content="21" />
-    <meta itemprop="ratingValue" content="5" />
-</div>                   
+                                     
 
 		<link itemprop="image" href="/assets/thumb/ORI600_LMR.png?20240404084629" />
 		<!--<meta itemprop="gtin" content="" />-->
@@ -620,7 +617,7 @@
 {% assign google_image_url = 'https://cdn.stacktome.com/frontend/widget/staging/google.png' %}
 {% assign empty_stars = 5 | minus: floor_summary_rating | minus: 1 %}
 
-<div class='stacktome_total-info custom-total-info'>
+<div class='stacktome_total-info custom-total-info' itemscope itemtype="http://schema.org/AggregateRating">
 	{% if userWidgetConfig.layoutStyle == "unstyled" %}
 		<div class='stacktome_total-info-header custom-font-color custom-total-info-header' itemprop='ratingExplanation'>{{ languageData.totalInfoTemplate.averageRating }}</div>
 	{% endif %}
@@ -1204,7 +1201,7 @@
 {% endcase %}
 {% assign current_month_index = review.created_at | date: '%m' | minus: 1 %}
 
-<div class="stacktome_review-element custom-review-element">
+<div class="stacktome_review-element custom-review-element" itemscope itemtype="http://schema.org/UserReview">
     <header class="stacktome_review-header custom-review-header">
         {% if userWidgetConfig.reviews.shownElements.rating == true %}
             <div itemprop='reviewRating' itemscope itemtype='http://schema.org/Rating' class="stacktome_review-stars custom-review-stars">
