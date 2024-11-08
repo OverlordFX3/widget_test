@@ -620,7 +620,7 @@
 {% assign google_image_url = 'https://cdn.stacktome.com/frontend/widget/staging/google.png' %}
 {% assign empty_stars = 5 | minus: floor_summary_rating | minus: 1 %}
 
-<div class='stacktome_total-info custom-total-info' itemscope itemtype="http://schema.org/AggregateRating">
+<div class='stacktome_total-info custom-total-info'>
 	{% if userWidgetConfig.layoutStyle == "unstyled" %}
 		<div class='stacktome_total-info-header custom-font-color custom-total-info-header' itemprop='ratingExplanation'>{{ languageData.totalInfoTemplate.averageRating }}</div>
 	{% endif %}
@@ -1204,7 +1204,7 @@
 {% endcase %}
 {% assign current_month_index = review.created_at | date: '%m' | minus: 1 %}
 
-<div class="stacktome_review-element custom-review-element" itemscope itemtype="http://schema.org/UserReview">
+<div class="stacktome_review-element custom-review-element">
     <header class="stacktome_review-header custom-review-header">
         {% if userWidgetConfig.reviews.shownElements.rating == true %}
             <div itemprop='reviewRating' itemscope itemtype='http://schema.org/Rating' class="stacktome_review-stars custom-review-stars">
