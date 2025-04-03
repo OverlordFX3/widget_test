@@ -3,46 +3,44 @@
     <div class="carousel-container">
       <div class="carousel-track">
         <div class="carousel-slide">
-          <img src="https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_standing.jpg" alt="Burst of Joy - Standing">
+          <img src="" alt="Burst of Joy - Standing">
         </div>
         <div class="carousel-slide">
-          <img src="https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_overview.jpg" alt="Burst of Joy - Overview">
+          <img src="" alt="Burst of Joy - Overview">
         </div>
         <div class="carousel-slide">
-          <img src="https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_closeup.jpg" alt="Burst of Joy - Closeup">
+          <img src="" alt="Burst of Joy - Closeup">
         </div>
       </div>
       <button class="carousel-button prev" aria-label="Previous image">❮</button>
-      <button class="carousel-button next" aria-label="Next image">❯</button>b
+      <button class="carousel-button next" aria-label="Next image">❯</button>
     </div>
     <div class="carousel-dots">
       <span class="dot active" data-index="0"></span>
       <span class="dot" data-index="1"></span>
       <span class="dot" data-index="2"></span>
     </div>
-    <span class="discount-badge">-50%</span>
+    <span class="discount-badge"></span>
   </div>
   <div class="product-info">
-    <h3 class="product-name">TEST 1</h3>
-    
+    <h3 class="product-name"></h3>
     <div class="product-rating">
       <div class="star-rating">
         <span class="stars">
-          <span class="filled-stars" style="width: 80%;">★★★★★</span>
+          <span class="filled-stars" style="width: 0%;">★★★★★</span>
           <span class="empty-stars">★★★★★</span>
         </span>
-        <span class="rating-count">50 reviews</span>
+        <span class="rating-count"></span>
       </div>
     </div>
-    
-    <p class="product-description">Testing description of product 1</p>
+    <p class="product-description"></p>
     <div class="product-price">
-      <span class="current-price">£32.22</span>
+      <span class="current-price"></span>
       <span class="original-price">£34.99</span>
     </div>
-    <p class="expiration-date">Offer expires at: 2025-04-10T12:00:00Z
+    <p class="expiration-date">Offer expires at: </p>
     <button class="add-to-cart-btn">Buy now with 1 click</button>
-<a href="" class="new-offer-btn">NEW OFFER</a>
+    <a href="#" class="new-offer-btn" id="newOfferBtn"></a>
   </div>
 </div>
 
@@ -250,6 +248,9 @@
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s;
+    text-align: center;
+    display: block;
+    text-decoration: none;
   }
   
   .new-offer-btn:hover {
@@ -258,57 +259,7 @@
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const track = document.querySelector('.carousel-track');
-    const slides = document.querySelectorAll('.carousel-slide');
-    const nextButton = document.querySelector('.carousel-button.next');
-    const prevButton = document.querySelector('.carousel-button.prev');
-    const dots = document.querySelectorAll('.dot');
-    
-    let currentIndex = 0;
-    
-    // Set initial position
-    updateCarousel();
-    
-    // Event listeners
-    nextButton.addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % slides.length;
-      updateCarousel();
-    });
-    
-    prevButton.addEventListener('click', () => {
-      currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-      updateCarousel();
-    });
-    
-    dots.forEach(dot => {
-      dot.addEventListener('click', () => {
-        currentIndex = parseInt(dot.getAttribute('data-index'));
-        updateCarousel();
-      });
-    });
-    
-    // Auto-advance carousel every 5 seconds
-    setInterval(() => {
-      currentIndex = (currentIndex + 1) % slides.length;
-      updateCarousel();
-    }, 5000);
-    
-    function updateCarousel() {
-      track.style.transform = `translateX(-${currentIndex * 100}%)`;
-      
-      // Update active dot
-      dots.forEach((dot, index) => {
-        if (index === currentIndex) {
-          dot.classList.add('active');
-        } else {
-          dot.classList.remove('active');
-        }
-      });
-    }
-  });
-</script>
-<script>
+  // assumption: offers data is being passed from the template system
   const jsonData = JSON.parse(`
     [object Object][object Object]
   `);
