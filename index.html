@@ -3,46 +3,46 @@
     <div class="carousel-container">
       <div class="carousel-track">
         <div class="carousel-slide">
-          <img src="https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_standing.jpg" alt="Burst of Joy - Standing">
+          <img src="" alt="Burst of Joy - Standing">
         </div>
         <div class="carousel-slide">
-          <img src="https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_overview.jpg" alt="Burst of Joy - Overview">
+          <img src="" alt="Burst of Joy - Overview">
         </div>
         <div class="carousel-slide">
-          <img src="https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_closeup.jpg" alt="Burst of Joy - Closeup">
+          <img src="" alt="Burst of Joy - Closeup">
         </div>
       </div>
       <button class="carousel-button prev" aria-label="Previous image">❮</button>
-      <button class="carousel-button next" aria-label="Next image">❯</button>b
+      <button class="carousel-button next" aria-label="Next image">❯</button>
     </div>
     <div class="carousel-dots">
       <span class="dot active" data-index="0"></span>
       <span class="dot" data-index="1"></span>
       <span class="dot" data-index="2"></span>
     </div>
-    <span class="discount-badge">-50%</span>
+    <span class="discount-badge">-%</span>
   </div>
   <div class="product-info">
-    <h3 class="product-name">TEST 1</h3>
+    <h3 class="product-name"></h3>
     
     <div class="product-rating">
       <div class="star-rating">
         <span class="stars">
-          <span class="filled-stars" style="width: 80%;">★★★★★</span>
+          <span class="filled-stars" style="width: NaN%;">★★★★★</span>
           <span class="empty-stars">★★★★★</span>
         </span>
-        <span class="rating-count">50 reviews</span>
+        <span class="rating-count"> reviews</span>
       </div>
     </div>
     
-    <p class="product-description">Testing description of product 1</p>
+    <p class="product-description"></p>
     <div class="product-price">
-      <span class="current-price">£32.22</span>
+      <span class="current-price"></span>
       <span class="original-price">£34.99</span>
     </div>
-    <p class="expiration-date">Offer expires at: 2025-04-10T12:00:00Z
+    <p class="expiration-date">Offer expires at: </p>
     <button class="add-to-cart-btn">Buy now with 1 click</button>
-<a href="" class="new-offer-btn">NEW OFFER</a>
+    <button id="new-offer-btn" class="new-offer-btn">Next Offer</button>
   </div>
 </div>
 
@@ -264,12 +264,40 @@
     const nextButton = document.querySelector('.carousel-button.next');
     const prevButton = document.querySelector('.carousel-button.prev');
     const dots = document.querySelectorAll('.dot');
+    const nextOfferButton = document.getElementById('new-offer-btn');
     
     let currentIndex = 0;
+    let productIndex = 0;
+
+    const offers = [{"productName":"TEST 1","productDescription":"Testing description of product 1","productPrice":32.22,"productPriceCurrencySymbol":"£","productDiscount":50,"productOfferUrl":"https://www.google.com","offerType":"NEW OFFER","rating":4,"reviewCount":50,"productImages":["https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_standing.jpg","https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_overview.jpg","https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_closeup.jpg"],"expireAt":"2025-04-10T12:00:00Z"},{"productName":"TEST 2","productDescription":"Testing description of product 2","productPrice":45,"productPriceCurrencySymbol":"£","productDiscount":30,"productOfferUrl":"https://www.example.com","offerType":"NEW OFFER 2","rating":5,"reviewCount":100,"productImages":["https://example.com/image1.jpg","https://example.com/image2.jpg","https://example.com/image3.jpg"],"expireAt":"2025-05-15T12:00:00Z"}];
+
+    function updateProduct() {
+      const currentOffer = offers[productIndex];
+      document.querySelector('.product-image-carousel img').src = currentOffer.productImages[currentIndex];
+      document.querySelector('.product-name').textContent = currentOffer.productName;
+      document.querySelector('.product-description').textContent = currentOffer.productDescription;
+      document.querySelector('.current-price').textContent = currentOffer.productPriceCurrencySymbol + currentOffer.productPrice;
+      document.querySelector('.discount-badge').textContent = '-' + currentOffer.productDiscount + '%';
+      document.querySelector('.expiration-date').textContent = 'Offer expires at: ' + currentOffer.expireAt;
+    }
+
+    function updateCarousel() {
+      track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+      // Update active dot
+      dots.forEach((dot, index) => {
+        if (index === currentIndex) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    }
     
-    // Set initial position
+    // Initial setup
+    updateProduct();
     updateCarousel();
-    
+
     // Event listeners
     nextButton.addEventListener('click', () => {
       currentIndex = (currentIndex + 1) % slides.length;
@@ -287,24 +315,16 @@
         updateCarousel();
       });
     });
-    
+
+    nextOfferButton.addEventListener('click', () => {
+      productIndex = (productIndex + 1) % offers.length;
+      updateProduct();
+    });
+
     // Auto-advance carousel every 5 seconds
     setInterval(() => {
       currentIndex = (currentIndex + 1) % slides.length;
       updateCarousel();
     }, 5000);
-    
-    function updateCarousel() {
-      track.style.transform = `translateX(-${currentIndex * 100}%)`;
-      
-      // Update active dot
-      dots.forEach((dot, index) => {
-        if (index === currentIndex) {
-          dot.classList.add('active');
-        } else {
-          dot.classList.remove('active');
-        }
-      });
-    }
   });
 </script>
