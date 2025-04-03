@@ -272,21 +272,29 @@
 
     const offers = [{"productName":"TEST 1","productDescription":"Testing description of product 1","productPrice":32.22,"productPriceCurrencySymbol":"£","productDiscount":50,"productOfferUrl":"https://www.google.com","offerType":"NEW OFFER","rating":4,"reviewCount":50,"productImages":["https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_standing.jpg","https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_overview.jpg","https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_closeup.jpg"],"expireAt":"2025-04-10T12:00:00Z"},{"productName":"TEST 2","productDescription":"Testing description of product 2","productPrice":45,"productPriceCurrencySymbol":"£","productDiscount":30,"productOfferUrl":"https://www.example.com","offerType":"NEW OFFER 2","rating":5,"reviewCount":100,"productImages":["https://example.com/image1.jpg","https://example.com/image2.jpg","https://example.com/image3.jpg"],"expireAt":"2025-05-15T12:00:00Z"}];
 
-    function updateProduct() {
-      const currentOffer = offers[productIndex];
-      slides.forEach((slide, i) => {
-        slide.src = currentOffer.productImages[i] || currentOffer.productImages[0];
-        slide.alt = `Product Image ${i + 1}`;
-      });
+    ffunction updateProduct() {
+  const currentOffer = offers[productIndex];
 
-      document.querySelector('.product-name').textContent = currentOffer.productName;
-      document.querySelector('.product-description').textContent = currentOffer.productDescription;
-      document.querySelector('.current-price').textContent = currentOffer.productPriceCurrencySymbol + currentOffer.productPrice;
-      document.querySelector('.discount-badge').textContent = '-' + currentOffer.productDiscount + '%';
-      document.querySelector('.expiration-date').textContent = 'Offer expires at: ' + currentOffer.expireAt;
+  // Update carousel images
+  slides.forEach((slide, i) => {
+    slide.src = currentOffer.productImages[i] || currentOffer.productImages[0];
+    slide.alt = `Product Image ${i + 1}`;
+  });
 
-      updateCarousel();
-    }
+  // Update product details
+  document.querySelector('.product-name').textContent = currentOffer.productName;
+  document.querySelector('.product-description').textContent = currentOffer.productDescription;
+  document.querySelector('.current-price').textContent = currentOffer.productPriceCurrencySymbol + currentOffer.productPrice;
+  document.querySelector('.discount-badge').textContent = `-${currentOffer.productDiscount}%`;
+  document.querySelector('.expiration-date').textContent = `Offer expires at: ${new Date(currentOffer.expireAt).toLocaleString()}`;
+  
+  // Update rating and reviews
+  const filledStars = document.querySelector('.filled-stars');
+  filledStars.style.width = `${currentOffer.rating * 20}%`;
+  document.querySelector('.rating-count').textContent = `${currentOffer.reviewCount} reviews`;
+
+  updateCarousel();
+}
 
     function updateCarousel() {
       track.style.transform = `translateX(-${currentIndex * 100}%)`;
