@@ -23,7 +23,7 @@
     <span class="discount-badge">-50%</span>
   </div>
   <div class="product-info">
-    <h3 class="product-name">TEST</h3>
+    <h3 class="product-name">TEST 1</h3>
     
     <div class="product-rating">
       <div class="star-rating">
@@ -35,7 +35,7 @@
       </div>
     </div>
     
-    <p class="product-description">Testing description of product</p>
+    <p class="product-description">Testing description of product 1</p>
     <div class="product-price">
       <span class="current-price">£32.22</span>
       <span class="original-price">£34.99</span>
@@ -307,4 +307,83 @@
       });
     }
   });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const data = {
+    "offers": [
+      {
+        "productName": "TEST 1",
+        "productDescription": "Testing description of product 1", 
+        "productPrice": 32.22,  
+        "productPriceCurrencySymbol": "£",
+        "productDiscount": 50.0,  
+        "productOfferUrl": "https://www.google.com",
+        "offerType": "NEW OFFER",
+        "rating": 4.0,  
+        "reviewCount": 50,  
+        "productImages": [
+          "https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_standing.jpg",
+          "https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_overview.jpg",
+          "https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_closeup.jpg"
+        ],
+        "expireAt": "2025-04-10T12:00:00Z"
+      },
+      {
+        "productName": "TEST 2",
+        "productDescription": "Testing description of product 2", 
+        "productPrice": 45.00,  
+        "productPriceCurrencySymbol": "£",
+        "productDiscount": 30.0,  
+        "productOfferUrl": "https://www.example.com",
+        "offerType": "NEW OFFER 2",
+        "rating": 5.0,  
+        "reviewCount": 100,  
+        "productImages": [
+          "https://example.com/image1.jpg",
+          "https://example.com/image2.jpg",
+          "https://example.com/image3.jpg"
+        ],
+        "expireAt": "2025-05-15T12:00:00Z"
+      }
+    ]
+  };
+
+  let currentOfferIndex = 0;
+
+  // Функция обновления товара на странице
+  function updateProductDisplay(offerIndex) {
+    const offer = data.offers[offerIndex];
+    
+    document.querySelector('.product-name').textContent = offer.productName;
+    document.querySelector('.product-description').textContent = offer.productDescription;
+    document.querySelector('.current-price').textContent = `${offer.productPriceCurrencySymbol}${offer.productPrice}`;
+    document.querySelector('.discount-badge').textContent = `-${offer.productDiscount}%`;
+    document.querySelector('.rating-count').textContent = `${offer.reviewCount} reviews`;
+
+    if (offer.rating) {
+      document.querySelector('.filled-stars').style.width = `${offer.rating * 20}%`;
+    }
+
+    document.querySelector('.expiration-date').textContent = `Offer expires at: ${offer.expireAt}`;
+    document.querySelector('.new-offer-btn').href = offer.productOfferUrl;
+    document.querySelector('.new-offer-btn').textContent = offer.offerType;
+
+    const imageElements = document.querySelectorAll('.carousel-slide img');
+    offer.productImages.forEach((image, index) => {
+      imageElements[index].src = image;
+    });
+  }
+
+  // Обработчик события нажатия на кнопку
+  document.querySelector('.new-offer-btn').addEventListener('click', function(e) {
+    e.preventDefault(); // предотвращает переход по ссылке
+
+    currentOfferIndex = (currentOfferIndex + 1) % data.offers.length;
+    updateProductDisplay(currentOfferIndex);
+  });
+
+  // Изначальное заполнение данными первого товара
+  updateProductDisplay(currentOfferIndex);
+});
 </script>
