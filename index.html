@@ -2,14 +2,15 @@
   <div class="product-image-carousel">
     <div class="carousel-container">
       <div class="carousel-track">
+        <!-- Ensure there are multiple images for each slide -->
         <div class="carousel-slide">
-          <img src="" alt="Burst of Joy - Standing">
+          <img src="https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_standing.jpg" alt="Product Image 1">
         </div>
         <div class="carousel-slide">
-          <img src="" alt="Burst of Joy - Overview">
+          <img src="https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_overview.jpg" alt="Product Image 2">
         </div>
         <div class="carousel-slide">
-          <img src="" alt="Burst of Joy - Closeup">
+          <img src="https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_closeup.jpg" alt="Product Image 3">
         </div>
       </div>
       <button class="carousel-button prev" aria-label="Previous image">❮</button>
@@ -20,27 +21,27 @@
       <span class="dot" data-index="1"></span>
       <span class="dot" data-index="2"></span>
     </div>
-    <span class="discount-badge">-%</span>
+    <span class="discount-badge">-50%</span>
   </div>
   <div class="product-info">
-    <h3 class="product-name"></h3>
+    <h3 class="product-name">TEST 1</h3>
     
     <div class="product-rating">
       <div class="star-rating">
         <span class="stars">
-          <span class="filled-stars" style="width: NaN%;">★★★★★</span>
+          <span class="filled-stars" style="width: 80%;">★★★★★</span>
           <span class="empty-stars">★★★★★</span>
         </span>
-        <span class="rating-count"> reviews</span>
+        <span class="rating-count">50 reviews</span>
       </div>
     </div>
     
-    <p class="product-description"></p>
+    <p class="product-description">Testing description of product 1</p>
     <div class="product-price">
-      <span class="current-price"></span>
+      <span class="current-price">£32.22</span>
       <span class="original-price">£34.99</span>
     </div>
-    <p class="expiration-date">Offer expires at: </p>
+    <p class="expiration-date">Offer expires at: 2025-04-10T12:00:00Z</p>
     <button class="add-to-cart-btn">Buy now with 1 click</button>
     <button id="new-offer-btn" class="new-offer-btn">Next Offer</button>
   </div>
@@ -260,12 +261,12 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const track = document.querySelector('.carousel-track');
-    const slides = document.querySelectorAll('.carousel-slide');
+    const slides = document.querySelectorAll('.carousel-slide img');
     const nextButton = document.querySelector('.carousel-button.next');
     const prevButton = document.querySelector('.carousel-button.prev');
     const dots = document.querySelectorAll('.dot');
     const nextOfferButton = document.getElementById('new-offer-btn');
-    
+
     let currentIndex = 0;
     let productIndex = 0;
 
@@ -273,12 +274,18 @@
 
     function updateProduct() {
       const currentOffer = offers[productIndex];
-      document.querySelector('.product-image-carousel img').src = currentOffer.productImages[currentIndex];
+      slides.forEach((slide, i) => {
+        slide.src = currentOffer.productImages[i] || currentOffer.productImages[0];
+        slide.alt = `Product Image ${i + 1}`;
+      });
+
       document.querySelector('.product-name').textContent = currentOffer.productName;
       document.querySelector('.product-description').textContent = currentOffer.productDescription;
       document.querySelector('.current-price').textContent = currentOffer.productPriceCurrencySymbol + currentOffer.productPrice;
       document.querySelector('.discount-badge').textContent = '-' + currentOffer.productDiscount + '%';
       document.querySelector('.expiration-date').textContent = 'Offer expires at: ' + currentOffer.expireAt;
+
+      updateCarousel();
     }
 
     function updateCarousel() {
@@ -293,10 +300,9 @@
         }
       });
     }
-    
+
     // Initial setup
     updateProduct();
-    updateCarousel();
 
     // Event listeners
     nextButton.addEventListener('click', () => {
@@ -308,7 +314,7 @@
       currentIndex = (currentIndex - 1 + slides.length) % slides.length;
       updateCarousel();
     });
-    
+
     dots.forEach(dot => {
       dot.addEventListener('click', () => {
         currentIndex = parseInt(dot.getAttribute('data-index'));
