@@ -2,14 +2,15 @@
   <div class="product-image-carousel">
     <div class="carousel-container">
       <div class="carousel-track">
+        <!-- Мы будем обновлять изображения с помощью JavaScript -->
         <div class="carousel-slide">
-          <img src="" alt="Burst of Joy - Standing">
+          <img id="productImage1" src="" alt="Burst of Joy - Standing">
         </div>
         <div class="carousel-slide">
-          <img src="" alt="Burst of Joy - Overview">
+          <img id="productImage2" src="" alt="Burst of Joy - Overview">
         </div>
         <div class="carousel-slide">
-          <img src="" alt="Burst of Joy - Closeup">
+          <img id="productImage3" src="" alt="Burst of Joy - Closeup">
         </div>
       </div>
       <button class="carousel-button prev" aria-label="Previous image">❮</button>
@@ -20,29 +21,32 @@
       <span class="dot" data-index="1"></span>
       <span class="dot" data-index="2"></span>
     </div>
-    <span class="discount-badge"></span>
+    <span class="discount-badge" id="discountBadge"></span>
   </div>
   <div class="product-info">
-    <h3 class="product-name"></h3>
+    <h3 class="product-name" id="productName"></h3>
+    
     <div class="product-rating">
       <div class="star-rating">
         <span class="stars">
           <span class="filled-stars" style="width: 0%;">★★★★★</span>
           <span class="empty-stars">★★★★★</span>
         </span>
-        <span class="rating-count"></span>
+        <span class="rating-count" id="ratingCount"></span>
       </div>
     </div>
-    <p class="product-description"></p>
+    
+    <p class="product-description" id="productDescription"></p>
     <div class="product-price">
-      <span class="current-price"></span>
+      <span class="current-price" id="productPrice"></span>
       <span class="original-price">£34.99</span>
     </div>
-    <p class="expiration-date">Offer expires at: </p>
+    <p class="expiration-date" id="expirationDate"></p>
     <button class="add-to-cart-btn">Buy now with 1 click</button>
-    <a href="#" class="new-offer-btn" id="newOfferBtn"></a>
+    <a href="#" id="newOfferBtn" class="new-offer-btn"></a>
   </div>
 </div>
+
 
 <style>
   .product-recommendation {
@@ -248,9 +252,6 @@
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s;
-    text-align: center;
-    display: block;
-    text-decoration: none;
   }
   
   .new-offer-btn:hover {
@@ -259,37 +260,90 @@
 </style>
 
 <script>
-  // assumption: offers data is being passed from the template system
-  const jsonData = JSON.parse(`
-    [object Object][object Object]
-  `);
-
+  document.addEventListener('DOMContentLoaded', function() {
+    const track = document.querySelector('.carousel-track');
+    const slides = document.querySelectorAll('.carousel-slide');
+    const nextButton = document.querySelector('.carousel-button.next');
+    const prevButton = document.querySelector('.carousel-button.prev');
+    const dots = document.querySelectorAll('.dot');
+    
+    let currentIndex = 0;
+    
+    // Set initial position
+    updateCarousel();
+    
+    // Event listeners
+    nextButton.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % slides.length;
+      updateCarousel();
+    });
+    
+    prevButton.addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+      updateCarousel();
+    });
+    
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        currentIndex = parseInt(dot.getAttribute('data-index'));
+        updateCarousel();
+      });
+    });
+    
+    // Auto-advance carousel every 5 seconds
+    setInterval(() => {
+      currentIndex = (currentIndex + 1) % slides.length;
+      updateCarousel();
+    }, 5000);
+    
+    function updateCarousel() {
+      track.style.transform = `translateX(-${currentIndex * 100}%)`;
+      
+      // Update active dot
+      dots.forEach((dot, index) => {
+        if (index === currentIndex) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    }
+  });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const jsonData = JSON.parse(`[object Object][object Object]`);
   let currentIndex = 0;
 
   function updateProductUI(index) {
     const offer = jsonData.offers[index];
-    document.querySelector('.product-name').textContent = offer.productName;
-    document.querySelector('.product-description').textContent = offer.productDescription;
-    document.querySelector('.current-price').textContent = `${offer.productPriceCurrencySymbol}${offer.productPrice}`;
-    document.querySelector('.discount-badge').textContent = `-${offer.productDiscount}%`;
-    document.querySelector('.rating-count').textContent = `${offer.reviewCount} reviews`;
-    document.querySelector('.filled-stars').style.width = `${offer.rating * 20}%`;
-    document.querySelector('.expiration-date').textContent = `Offer expires at: ${offer.expireAt}`;
-    document.querySelector('.new-offer-btn').textContent = offer.offerType;
-    document.querySelector('.new-offer-btn').href = offer.productOfferUrl;
 
-    const images = document.querySelectorAll('.carousel-slide img');
-    images.forEach((img, i) => {
-      img.src = offer.productImages[i];
-    });
+    // Обновляем контент
+    document.querySelector('#productName').textContent = offer.productName;
+    document.querySelector('#productDescription').textContent = offer.productDescription;
+    document.querySelector('#productPrice').textContent = `${offer.productPriceCurrencySymbol}${offer.productPrice}`;
+    document.querySelector('#discountBadge').textContent = `-${offer.productDiscount}%`;
+    document.querySelector('#ratingCount').textContent = `${offer.reviewCount} reviews`;
+    document.querySelector('.filled-stars').style.width = `${offer.rating * 20}%`;
+    document.querySelector('#expirationDate').textContent = `Offer expires at: ${offer.expireAt}`;
+    document.querySelector('#newOfferBtn').textContent = offer.offerType;
+    document.querySelector('#newOfferBtn').href = offer.productOfferUrl;
+
+    // Обновляем изображения
+    document.querySelector('#productImage1').src = offer.productImages[0];
+    document.querySelector('#productImage2').src = offer.productImages[1];
+    document.querySelector('#productImage3').src = offer.productImages[2];
   }
 
+  // Логика переключения предложений
   document.querySelector('#newOfferBtn').addEventListener('click', (event) => {
     event.preventDefault();
     currentIndex = (currentIndex + 1) % jsonData.offers.length;
     updateProductUI(currentIndex);
   });
 
-  // Initial setup
+  // Инициализация с первым предложением
   updateProductUI(currentIndex);
+});
+
 </script>
