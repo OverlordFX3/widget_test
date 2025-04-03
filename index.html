@@ -2,15 +2,14 @@
   <div class="product-image-carousel">
     <div class="carousel-container">
       <div class="carousel-track">
-        <!-- Мы будем обновлять изображения с помощью JavaScript -->
         <div class="carousel-slide">
-          <img id="productImage1" src="" alt="Burst of Joy - Standing">
+          <img src="" alt="Product Image 1">
         </div>
         <div class="carousel-slide">
-          <img id="productImage2" src="" alt="Burst of Joy - Overview">
+          <img src="" alt="Product Image 2">
         </div>
         <div class="carousel-slide">
-          <img id="productImage3" src="" alt="Burst of Joy - Closeup">
+          <img src="" alt="Product Image 3">
         </div>
       </div>
       <button class="carousel-button prev" aria-label="Previous image">❮</button>
@@ -21,29 +20,27 @@
       <span class="dot" data-index="1"></span>
       <span class="dot" data-index="2"></span>
     </div>
-    <span class="discount-badge" id="discountBadge"></span>
+    <span class="discount-badge"></span>
   </div>
   <div class="product-info">
-    <h3 class="product-name" id="productName"></h3>
-    
+    <h3 class="product-name"></h3>
     <div class="product-rating">
       <div class="star-rating">
         <span class="stars">
           <span class="filled-stars" style="width: 0%;">★★★★★</span>
           <span class="empty-stars">★★★★★</span>
         </span>
-        <span class="rating-count" id="ratingCount"></span>
+        <span class="rating-count"></span>
       </div>
     </div>
-    
-    <p class="product-description" id="productDescription"></p>
+    <p class="product-description"></p>
     <div class="product-price">
-      <span class="current-price" id="productPrice"></span>
+      <span class="current-price"></span>
       <span class="original-price">£34.99</span>
     </div>
-    <p class="expiration-date" id="expirationDate"></p>
+    <p class="expiration-date"></p>
     <button class="add-to-cart-btn">Buy now with 1 click</button>
-    <a href="#" id="newOfferBtn" class="new-offer-btn"></a>
+    <a href="#" class="new-offer-btn" id="newOfferBtn"></a>
   </div>
 </div>
 
@@ -311,39 +308,38 @@
   });
 </script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const jsonData = JSON.parse(`[object Object][object Object]`);
+  // assumes offers are being passed from the template engine
+  const jsonData = JSON.parse(`
+    [object Object][object Object]
+  `);
+
   let currentIndex = 0;
 
   function updateProductUI(index) {
     const offer = jsonData.offers[index];
 
-    // Обновляем контент
-    document.querySelector('#productName').textContent = offer.productName;
-    document.querySelector('#productDescription').textContent = offer.productDescription;
-    document.querySelector('#productPrice').textContent = `${offer.productPriceCurrencySymbol}${offer.productPrice}`;
-    document.querySelector('#discountBadge').textContent = `-${offer.productDiscount}%`;
-    document.querySelector('#ratingCount').textContent = `${offer.reviewCount} reviews`;
+    document.querySelector('.product-name').textContent = offer.productName;
+    document.querySelector('.product-description').textContent = offer.productDescription;
+    document.querySelector('.current-price').textContent = `${offer.productPriceCurrencySymbol}${offer.productPrice}`;
+    document.querySelector('.discount-badge').textContent = `-${offer.productDiscount}%`;
+    document.querySelector('.rating-count').textContent = `${offer.reviewCount} reviews`;
     document.querySelector('.filled-stars').style.width = `${offer.rating * 20}%`;
-    document.querySelector('#expirationDate').textContent = `Offer expires at: ${offer.expireAt}`;
-    document.querySelector('#newOfferBtn').textContent = offer.offerType;
-    document.querySelector('#newOfferBtn').href = offer.productOfferUrl;
+    document.querySelector('.expiration-date').textContent = `Offer expires at: ${offer.expireAt}`;
+    document.querySelector('.new-offer-btn').textContent = offer.offerType;
+    document.querySelector('.new-offer-btn').href = offer.productOfferUrl;
 
-    // Обновляем изображения
-    document.querySelector('#productImage1').src = offer.productImages[0];
-    document.querySelector('#productImage2').src = offer.productImages[1];
-    document.querySelector('#productImage3').src = offer.productImages[2];
+    const images = document.querySelectorAll('.carousel-slide img');
+    images[0].src = offer.productImages[0] || '';
+    images[1].src = offer.productImages[1] || '';
+    images[2].src = offer.productImages[2] || '';
   }
 
-  // Логика переключения предложений
   document.querySelector('#newOfferBtn').addEventListener('click', (event) => {
     event.preventDefault();
     currentIndex = (currentIndex + 1) % jsonData.offers.length;
     updateProductUI(currentIndex);
   });
 
-  // Инициализация с первым предложением
+  // Initial setup
   updateProductUI(currentIndex);
-});
-
 </script>
