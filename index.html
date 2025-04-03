@@ -3,47 +3,48 @@
     <div class="carousel-container">
       <div class="carousel-track">
         <div class="carousel-slide">
-          <img src="" alt="Product Image 1">
+          <img src="https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_standing.jpg" alt="Burst of Joy - Standing">
         </div>
         <div class="carousel-slide">
-          <img src="" alt="Product Image 2">
+          <img src="https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_overview.jpg" alt="Burst of Joy - Overview">
         </div>
         <div class="carousel-slide">
-          <img src="" alt="Product Image 3">
+          <img src="https://res.cloudinary.com/serenata-commerce-limited/image/upload/f_auto/t_Product550s/v1/Raw/110128_closeup.jpg" alt="Burst of Joy - Closeup">
         </div>
       </div>
       <button class="carousel-button prev" aria-label="Previous image">❮</button>
-      <button class="carousel-button next" aria-label="Next image">❯</button>
+      <button class="carousel-button next" aria-label="Next image">❯</button>b
     </div>
     <div class="carousel-dots">
       <span class="dot active" data-index="0"></span>
       <span class="dot" data-index="1"></span>
       <span class="dot" data-index="2"></span>
     </div>
-    <span class="discount-badge"></span>
+    <span class="discount-badge">-50%</span>
   </div>
   <div class="product-info">
-    <h3 class="product-name"></h3>
+    <h3 class="product-name">TEST 1</h3>
+    
     <div class="product-rating">
       <div class="star-rating">
         <span class="stars">
-          <span class="filled-stars" style="width: 0%;">★★★★★</span>
+          <span class="filled-stars" style="width: 80%;">★★★★★</span>
           <span class="empty-stars">★★★★★</span>
         </span>
-        <span class="rating-count"></span>
+        <span class="rating-count">50 reviews</span>
       </div>
     </div>
-    <p class="product-description"></p>
+    
+    <p class="product-description">Testing description of product 1</p>
     <div class="product-price">
-      <span class="current-price"></span>
+      <span class="current-price">£32.22</span>
       <span class="original-price">£34.99</span>
     </div>
-    <p class="expiration-date"></p>
+    <p class="expiration-date">Offer expires at: 2025-04-10T12:00:00Z
     <button class="add-to-cart-btn">Buy now with 1 click</button>
-    <a href="#" class="new-offer-btn" id="newOfferBtn"></a>
+<a href="" class="new-offer-btn">NEW OFFER</a>
   </div>
 </div>
-
 
 <style>
   .product-recommendation {
@@ -306,40 +307,4 @@
       });
     }
   });
-</script>
-<script>
-  // assumes offers are being passed from the template engine
-  const jsonData = JSON.parse(`
-    [object Object][object Object]
-  `);
-
-  let currentIndex = 0;
-
-  function updateProductUI(index) {
-    const offer = jsonData.offers[index];
-
-    document.querySelector('.product-name').textContent = offer.productName;
-    document.querySelector('.product-description').textContent = offer.productDescription;
-    document.querySelector('.current-price').textContent = `${offer.productPriceCurrencySymbol}${offer.productPrice}`;
-    document.querySelector('.discount-badge').textContent = `-${offer.productDiscount}%`;
-    document.querySelector('.rating-count').textContent = `${offer.reviewCount} reviews`;
-    document.querySelector('.filled-stars').style.width = `${offer.rating * 20}%`;
-    document.querySelector('.expiration-date').textContent = `Offer expires at: ${offer.expireAt}`;
-    document.querySelector('.new-offer-btn').textContent = offer.offerType;
-    document.querySelector('.new-offer-btn').href = offer.productOfferUrl;
-
-    const images = document.querySelectorAll('.carousel-slide img');
-    images[0].src = offer.productImages[0] || '';
-    images[1].src = offer.productImages[1] || '';
-    images[2].src = offer.productImages[2] || '';
-  }
-
-  document.querySelector('#newOfferBtn').addEventListener('click', (event) => {
-    event.preventDefault();
-    currentIndex = (currentIndex + 1) % jsonData.offers.length;
-    updateProductUI(currentIndex);
-  });
-
-  // Initial setup
-  updateProductUI(currentIndex);
 </script>
