@@ -163,12 +163,12 @@ document.getElementById('recForm').onsubmit = async function(e){
     document.getElementById('output').innerHTML = "Loading...";
     try {
         const resp = await fetch(
-            'https://services-staging.stacktome.com/api/recommendations/v1/templates/3/recommendations?apikey=fSKNKExtPdLC8YFXbXH80euskf6SVcR8',
+            'https://services-staging.stacktome.com/api/recommendations/v1/recommendations/offers?apikey=fSKNKExtPdLC8YFXbXH80euskf6SVcR8',
             { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) }
         );
         if(!resp.ok) throw new Error('HTTP '+resp.status);
         const json = await resp.json();
-        const offers = JSON.parse(json.widgetConfig).offers;
+        const offers = json.offers;
         document.getElementById('output').innerHTML = '';
         document.getElementById('output').appendChild(renderOffers(offers));
     } catch(err){
