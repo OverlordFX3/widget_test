@@ -1,6 +1,254 @@
-<div id="stacktome-recs-widget-1"></div>
-<script src="https://cdn.jsdelivr.net/gh/OverlordFX3/widget_test@main/widget-recommendations-fixed.js"
-    data-widget-id="1"
-    data-apikey="fSKNKExtPdLC8YFXbXH80euskf6SVcR8"
-    data-template-id="3"
-    data-staging="true"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Upload</title>
+  <style>
+    body {
+      background: #f6f7fb;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 32px 32px 24px 32px;
+      margin-top: 40px;
+      width: 100%;
+      max-width: 400px;
+    }
+    h2 {
+      margin-top: 0;
+      font-weight: 500;
+      color: #354052;
+      letter-spacing: 0.02em;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    form label {
+      display: flex;
+      flex-direction: column;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #495057;
+      margin-bottom: 18px;
+      letter-spacing: 0.01em;
+    }
+    form input[type="text"],
+    form input[type="email"] {
+      margin-top: 6px;
+      padding: 10px 12px;
+      font-size: 1rem;
+      border: 1.3px solid #ccd0d5;
+      border-radius: 6px;
+      transition: border-color 0.2s;
+      outline: none;
+      background: #fafbfc;
+      color: #2b2e32;
+    }
+    form input:focus {
+      border-color: #368ade;
+      background: #fff;
+      box-shadow: 0 0 2px #368ade25;
+    }
+    button[type="submit"] {
+      width: 100%;
+      background: linear-gradient(90deg, #3f8efc 60%, #2762c8 100%);
+      color: #fff;
+      font-size: 1.09rem;
+      font-weight: bold;
+      margin-top: 4px;
+      padding: 12px 0 10px 0;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #368ade22;
+      letter-spacing: 0.03em;
+      transition: background 0.16s, box-shadow 0.16s, transform 0.13s;
+    }
+    button[type="submit"]:hover {
+      background: linear-gradient(90deg, #2762c8 20%, #3f8efc 100%);
+      box-shadow: 0 4px 14px #368ade44;
+      transform: translateY(-1px) scale(1.01);
+    }
+    .msg-success {
+      border: 1.5px solid #27ae60;
+      background: #e9fbe8;
+      color: #1d8244;
+      border-radius: 5px;
+      padding: 15px 10px;
+      margin-top: 28px;
+      font-weight: 600;
+      word-break: break-all;
+      text-align: center;
+    }
+    .msg-error {
+      border: 1.5px solid #e74c3c;
+      background: #fff0ef;
+      color: #d20d16;
+      border-radius: 5px;
+      padding: 15px 10px;
+      margin-top: 28px;
+      font-weight: 600;
+      word-break: break-all;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Create Order</h2>
+    <form id="orderForm" autocomplete="off">
+      <label>
+        Email:
+        <input type="email" name="email" required>
+      </label>
+      <label>
+        First name:
+        <input type="text" name="firstName">
+      </label>
+      <label>
+        Last name:
+        <input type="text" name="lastName">
+      </label>
+      <label>
+        Order ID:
+        <input type="text" name="orderId" required>
+      </label>
+      <button type="submit">Add</button>
+    </form>
+    <div id="result"></div>
+  </div>
+  <script>
+    function makeRandomId() {
+      return 'id-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
+    }
+
+    document.getElementById('orderForm').onsubmit = async function(e) {
+      e.preventDefault();
+
+      const iso = new Date().toISOString();
+
+      const data = {
+        r: 1, // Example value; adapt based on your logic.
+        app_id: "hdpiano",
+        event_id: "import",
+        transation_type: null,
+        event_type: "sale",
+        ts_event: iso,
+        ts_order_created: iso,
+        ts_order_placed: iso,
+        ts_scheduled_delivery: iso,
+        ts_scheduled_dispatch: iso,
+        orderline_id: null,
+        order_id: e.target.orderId.value,
+        order_number: null,
+        order_name: null,
+        subscription_order_id: null,
+        dispatch_ref: null,
+        currency_code: "USD",
+        sales_channel: null,
+        domain: null,
+        sales_quantity: 1,
+        sales_unit_price: null,
+        sales_unit_cost: null,
+        sales_amount_total: null,
+        sales_amount_tax: null,
+        sales_amount_discount: null,
+        sales_amount_net: null,
+        sales_promotion_code: null,
+        sales_promotion_name: null,
+        sales_promotion_campaign: null,
+        sales_promotion_campaign_type: null,
+        sales_promotion_discount_type: null,
+        sales_promotion_customer_type: null,
+        sales_promotion_medium: null,
+        sales_promotion_source: null,
+        product_sku: null,
+        product_sku_base: null,
+        product_name: null,
+        product_type: "hdpiano",
+        product_is_addon: false,
+        business_name: null,
+        business_division: null,
+        business_region: null,
+        business_country_of_sales: null,
+        customer_id: makeRandomId(),
+        customer_title: null,
+        first_name: e.target.firstName.value,
+        last_name: e.target.lastName.value,
+        customer_concatenated_name: `${e.target.firstName.value} ${e.target.lastName.value}`,
+        customer_gender_derived: null,
+        customer_address1: null,
+        customer_address2: null,
+        customer_address3: null,
+        customer_post_zip_code: null,
+        customer_city: null,
+        customer_countystate: null,
+        customer_country: null,
+        customer_address_type: null,
+        customer_language: null,
+        customer_email_address: e.target.email.value,
+        customer_email_domain: null,
+        customer_mobile: null,
+        visitor_id: null,
+        ip_address: null,
+        ip_countrycode: null,
+        ip_number: null,
+        carrier: null,
+        carrier_service_name: null,
+        fulfillment_company: null,
+        fulfillment_branch: null,
+        fulfillment_branch_code: null,
+        delivery_address_title: null,
+        delivery_address_first_name: null,
+        delivery_address_last_name: null,
+        delivery_address_concatenated_name: null,
+        delivery_address_organisation: null,
+        delivery_address1: null,
+        delivery_address2: null,
+        delivery_address3: null,
+        delivery_address_post_zip_code: null,
+        delivery_address_city: null,
+        delivery_address_countystate: null,
+        delivery_address_country: null,
+        delivery_address_type: null,
+        user_agent: navigator.userAgent
+      };
+
+      const apiurl = 'https://services.stacktome.com/api/events/v1/sales?apikey=ofshMGbN2qBRivo9lKjQjOjD0EUoFaCp';
+
+      let msg, cls;
+      try {
+        const response = await fetch(apiurl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify([data])
+        });
+
+        const txt = await response.text();
+        if (response.ok) {
+          msg = "✅ Success!";
+          cls = "msg-success";
+        } else {
+          msg = "❌ Error: " + response.statusText + "<br>" + txt;
+          cls = "msg-error";
+        }
+      } catch (err) {
+        msg = "❌ Error: " + err;
+        cls = "msg-error";
+      }
+
+      const res = document.getElementById('result');
+      res.innerHTML = msg;
+      res.className = cls;
+    };
+  </script>
+</body>
+</html>
