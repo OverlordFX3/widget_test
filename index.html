@@ -113,14 +113,6 @@
         First name:
         <input type="text" name="firstName">
       </label>
-      <label>
-        Last name:
-        <input type="text" name="lastName">
-      </label>
-      <label>
-        Order ID:
-        <input type="text" name="orderId" required>
-      </label>
       <button type="submit">Add</button>
     </form>
     <div id="result"></div>
@@ -132,98 +124,44 @@
 
     document.getElementById('orderForm').onsubmit = async function(e) {
       e.preventDefault();
-
       const iso = new Date().toISOString();
+      const customerId = makeRandomId();
+      const orderLineId = makeRandomId();
 
       const data = {
-        r: 1, // Example value; adapt based on your logic.
-        app_id: "hdpiano",
-        event_id: "import",
-        transation_type: null,
-        event_type: "sale",
-        ts_event: iso,
-        ts_order_created: iso,
-        ts_order_placed: iso,
-        ts_scheduled_delivery: iso,
-        ts_scheduled_dispatch: iso,
-        orderline_id: null,
-        order_id: e.target.orderId.value,
-        order_number: null,
-        order_name: null,
-        subscription_order_id: null,
-        dispatch_ref: null,
-        currency_code: "USD",
-        sales_channel: null,
-        domain: null,
-        sales_quantity: 1,
-        sales_unit_price: null,
-        sales_unit_cost: null,
-        sales_amount_total: null,
-        sales_amount_tax: null,
-        sales_amount_discount: null,
-        sales_amount_net: null,
-        sales_promotion_code: null,
-        sales_promotion_name: null,
-        sales_promotion_campaign: null,
-        sales_promotion_campaign_type: null,
-        sales_promotion_discount_type: null,
-        sales_promotion_customer_type: null,
-        sales_promotion_medium: null,
-        sales_promotion_source: null,
-        product_sku: null,
-        product_sku_base: null,
-        product_name: null,
-        product_type: "hdpiano",
-        product_is_addon: false,
-        business_name: null,
-        business_division: null,
-        business_region: null,
-        business_country_of_sales: null,
-        customer_id: makeRandomId(),
-        customer_title: null,
-        first_name: e.target.firstName.value,
-        last_name: e.target.lastName.value,
-        customer_concatenated_name: `${e.target.firstName.value} ${e.target.lastName.value}`,
-        customer_gender_derived: null,
-        customer_address1: null,
-        customer_address2: null,
-        customer_address3: null,
-        customer_post_zip_code: null,
-        customer_city: null,
-        customer_countystate: null,
-        customer_country: null,
-        customer_address_type: null,
-        customer_language: null,
-        customer_email_address: e.target.email.value,
-        customer_email_domain: null,
-        customer_mobile: null,
-        visitor_id: null,
-        ip_address: null,
-        ip_countrycode: null,
-        ip_number: null,
-        carrier: null,
-        carrier_service_name: null,
-        fulfillment_company: null,
-        fulfillment_branch: null,
-        fulfillment_branch_code: null,
-        delivery_address_title: null,
-        delivery_address_first_name: null,
-        delivery_address_last_name: null,
-        delivery_address_concatenated_name: null,
-        delivery_address_organisation: null,
-        delivery_address1: null,
-        delivery_address2: null,
-        delivery_address3: null,
-        delivery_address_post_zip_code: null,
-        delivery_address_city: null,
-        delivery_address_countystate: null,
-        delivery_address_country: null,
-        delivery_address_type: null,
-        user_agent: navigator.userAgent
+        orderId: orderLineId,
+        type: "sale",
+        orderLines: [
+          {
+            id: orderLineId,
+            name: "hdpiano",
+            netPrice: 0,
+            grossPrice: 0,
+            quantity: 1,
+            productSku: "hdpiano",
+            productSkuBase: "hdpiano",
+            productType: "hdpiano",
+            isAddOn: false,
+            tax: 0,
+            cost: 0,
+            discount: 0,
+            category: "hdpiano",
+            brand: "hdpiano",
+            currency: "USD"
+          }
+        ],
+        createdAt: iso,
+        confirmedAt: iso,
+        scheduledDeliveryAt: iso,
+        scheduledDispatchAt: iso,
+        customer: {
+          id: customerId,
+          email: e.target.email.value,
+          firstName: e.target.firstName.value,
+          lastName: "hdpiano"
+        }
       };
-
       const apiurl = 'https://services.stacktome.com/api/events/v1/sales?apikey=ofshMGbN2qBRivo9lKjQjOjD0EUoFaCp';
-
       let msg, cls;
       try {
         const response = await fetch(apiurl, {
@@ -231,20 +169,30 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify([data])
         });
-
-        const txt = await response.text();
-        if (response.ok) {
-          msg = "✅ Success!";
-          cls = "msg-success";
-        } else {
-          msg = "❌ Error: " + response.statusText + "<br>" + txt;
-          cls = "msg-error";
+        let txt = await response.text();
+        try {
+          const parsed = JSON.parse(txt);
+          if (parsed.success) {
+            msg = "✅ Success!";
+            cls = "msg-success";
+          } else {
+            msg = "❌ Error: " + (parsed.failure || response.statusText);
+            if (parsed.errors) msg += "<br>" + parsed.errors;
+            cls = "msg-error";
+          }
+        } catch {
+          if (response.ok) {
+            msg = "✅ Success!";
+            cls = "msg-success";
+          } else {
+            msg = "❌ Error: " + response.statusText + "<br>" + txt;
+            cls = "msg-error";
+          }
         }
       } catch (err) {
         msg = "❌ Error: " + err;
         cls = "msg-error";
       }
-
       const res = document.getElementById('result');
       res.innerHTML = msg;
       res.className = cls;
