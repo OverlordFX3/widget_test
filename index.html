@@ -210,8 +210,8 @@
             // Create new script element
             const script = document.createElement('script');
             script.setAttribute('data-widget-script', 'true');
-            // script.src = 'https://cdn.stacktome.com/frontend/offer-widget/production/widget.js';
-            script.src = 'widget.js';
+            script.src = 'https://cdn.stacktome.com/frontend/offer-widget/production/widget-v2.js';
+            // script.src = 'widget.js';
             
             // Get payload from textarea
             const payload = document.getElementById('widgetPayload').value;
@@ -227,15 +227,7 @@
                 widgetPayload: JSON.parse(payload)                
             }));
 
-            //             script.setAttribute('filter-params', JSON.stringify({
-            //     widgetId: "1",
-            //     apiKey: "kNFRb0Q9OX2cYrkkhZQEE6U7fMRkH5JJ",
-            //     staging: false,
-            //     trackingApiKey: "koRrISt4zxBSfTbPFsD4raGbeptHbpKh",
-            //     domain: "wildearth.com.au",
-            //     appId: "wild_earth",
-            //     widgetPayload: JSON.parse(payload)                
-            // }));
+            
 
             // Add script to document
             document.body.appendChild(script);
@@ -246,6 +238,7 @@
     </script>
 </body>
 </html>
+
 
 
 
