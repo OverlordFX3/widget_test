@@ -59,7 +59,7 @@
     </div>
 
     <!-- Widget placeholder -->
-    <div id="stacktome-widget-3" class="widget-container">
+    <div id="stacktome-widget-2" class="widget-container">
         Loading widget...
     </div>
 
@@ -68,7 +68,7 @@
         <textarea id="widgetPayload">{
   "products": [
     {
-      "sku": "8436007233431",
+      "sku": "ss1500.09",
       "quantity": 1,
       "price": 512.07
     }
@@ -98,7 +98,7 @@
                 const response = await fetch(`https://services.stacktome.com/api/recommendations/v1/products/search?q=${encodeURIComponent(searchTerm)}&availability=${encodeURIComponent('in stock')}`, {
                     headers: {
                         'accept': 'application/json',
-                        'apikey': 'RMpqOP3fH563ohyFsgzpHyA5eSNGB98l',
+                        'apikey': 'pFle3ZbZGfFBw4I4aImkyIxCy9tnA2uR',
                         'origin': 'https://app.stacktome.com',
                         'referer': 'https://app.stacktome.com/'
                     }
@@ -218,12 +218,12 @@
             
             // Set filter params with payload
             script.setAttribute('filter-params', JSON.stringify({
-                widgetId: "3",
-                apiKey: "RMpqOP3fH563ohyFsgzpHyA5eSNGB98l",
+                widgetId: "2",
+                apiKey: "pFle3ZbZGfFBw4I4aImkyIxCy9tnA2uR",
                 staging: false,
-                trackingApiKey: "iXfazz1lTiHAJcOers6hOIc1sZY9Qxh5",
-                domain: "carethy.net",
-                appId: "lvanguard",
+                trackingApiKey: "4L5WOo6BOJZm1MvlJIUhZ00Wc47Fj5Qb",
+                domain: "selectspecs.com",
+                appId: "selectspecs",
                 widgetPayload: JSON.parse(payload)                
             }));
 
@@ -246,5 +246,3 @@
     </script>
 </body>
 </html>
-
-
