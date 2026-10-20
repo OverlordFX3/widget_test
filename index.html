@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="robots" content="noindex,nofollow">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<meta name="keywords" content="CLV,Osprey,Osprey Renn 50L Womens Hiking Backpack - Cascade Blue/Melon Orange"/>
 	<meta name="description" content="Osprey Renn 50L Womens Hiking Backpack - Cascade Blue/Melon Orange - Osprey"/>
@@ -97,7 +98,7 @@
 	<!-- END Searchspring recs script -->
 
 </head>
-<body id="n_product" class="header-category" class="page-id-6473 "><div style="background:#fff7e0;border-bottom:1px solid #e8d38a;padding:8px 16px;font:13px system-ui,sans-serif;color:#5c4a00">StackTome Google Rich Results test copy of a Wild Earth product page &mdash; third-party scripts removed, review widget 769 under test. Not the live store.</div>
+<body id="n_product" class="header-category" class="page-id-6473 "><div style="background:#fff7e0;border-bottom:1px solid #e8d38a;padding:8px 16px;font:13px system-ui,sans-serif;color:#5c4a00">StackTome Google Rich Results test copy of a Wild Earth product page &mdash; third-party scripts removed, rating widget 770 under test. Not the live store.</div>
 <!-- category-header-template -->
 
 <!-- START Top Header -->
@@ -2169,8 +2170,8 @@
 				
 				<!-- START StackTome Widget -->
 
-				<a href="#product-reviews" class="product-reviews-link"><div id="reviewsBuyBoxHeader" class="stacktome-widget-312" data-product-id="OSP1041241"></div></a>
-				<script id='stacktome-reviews-widget-script-312' class='stacktome-reviews-widget-script' src="https://cdn.stacktome.com/frontend/widget/production/widget.js" filter-params='{"widgetId":312,"apiKey":"QhG95OtEBPlRcN3ABKexgBCdTUbKZIUl","searchInParentLocation":true,"productSku":"OSP1041241","fromSentimentScore":-1,"timeout":{"timeoutMillis":1000},"reviewType":"product"}'></script>
+				<a href="#product-reviews" class="product-reviews-link"><div id="reviewsBuyBoxHeader" class="stacktome-widget-770" data-product-id="OSP1041241"></div></a>
+				<script id='stacktome-reviews-widget-script-770' class='stacktome-reviews-widget-script' src="https://cdn.stacktome.com/frontend/widget/production/widget.js" filter-params='{"widgetId":770,"apiKey":"QhG95OtEBPlRcN3ABKexgBCdTUbKZIUl","searchInParentLocation":true,"productSku":"OSP1041241","fromSentimentScore":-1,"timeout":{"timeoutMillis":1000},"reviewType":"product"}'></script>
 
 				<!-- END StackTome Widget -->
 			
@@ -2793,8 +2794,8 @@ BOTTOM: bluesign® approved 100% recycled 600D polyester, DWR treatment made wit
 									</div>
 								</div>
 								<!-- START StackTome Widget -->
-								<div id="stacktome-widget-769"></div>
-								<script id='stacktome-reviews-widget-script-769' class='stacktome-reviews-widget-script' src="https://cdn.stacktome.com/frontend/widget/production/widget.js" filter-params='{"widgetId":769,"apiKey":"QhG95OtEBPlRcN3ABKexgBCdTUbKZIUl","searchInParentLocation":true,"productSku":"OSP1041241","paging":{"pageSize":3},"sorting":[{"field":"createdAt","direction":"desc"}],"timeout":{"timeoutMillis":1000},"reviewType":"product"}'></script>
+								<div id="stacktome-widget-313"></div>
+								<script id='stacktome-reviews-widget-script-313' class='stacktome-reviews-widget-script' src="https://cdn.stacktome.com/frontend/widget/production/widget.js" filter-params='{"widgetId":313,"apiKey":"QhG95OtEBPlRcN3ABKexgBCdTUbKZIUl","searchInParentLocation":true,"productSku":"OSP1041241","paging":{"pageSize":3},"sorting":[{"field":"createdAt","direction":"desc"}],"timeout":{"timeoutMillis":1000},"reviewType":"product"}'></script>
 								<!-- END StackTome Widget -->
 							</div>
 						</div>
@@ -2835,8 +2836,8 @@ BOTTOM: bluesign® approved 100% recycled 600D polyester, DWR treatment made wit
 				
 				<!-- START StackTome Widget -->
 
-				<a href="#product-reviews" class="product-reviews-link"><div id="reviewsBuyBoxHeader" class="stacktome-widget-312" data-product-id="OSP1041241"></div></a>
-				<script id='stacktome-reviews-widget-script-312' class='stacktome-reviews-widget-script' src="https://cdn.stacktome.com/frontend/widget/production/widget.js" filter-params='{"widgetId":312,"apiKey":"QhG95OtEBPlRcN3ABKexgBCdTUbKZIUl","searchInParentLocation":true,"productSku":"OSP1041241","fromSentimentScore":-1,"timeout":{"timeoutMillis":1000},"reviewType":"product"}'></script>
+				<a href="#product-reviews" class="product-reviews-link"><div id="reviewsBuyBoxHeader" class="stacktome-widget-770" data-product-id="OSP1041241"></div></a>
+				<script id='stacktome-reviews-widget-script-770' class='stacktome-reviews-widget-script' src="https://cdn.stacktome.com/frontend/widget/production/widget.js" filter-params='{"widgetId":770,"apiKey":"QhG95OtEBPlRcN3ABKexgBCdTUbKZIUl","searchInParentLocation":true,"productSku":"OSP1041241","fromSentimentScore":-1,"timeout":{"timeoutMillis":1000},"reviewType":"product"}'></script>
 
 				<!-- END StackTome Widget -->
 			
@@ -3880,18 +3881,44 @@ BOTTOM: bluesign® approved 100% recycled 600D polyester, DWR treatment made wit
 <script>
 /* TEST ONLY: record the structured-data outcome (prototype or widget template) in the DOM for the local headless run. */
 document.addEventListener('stacktome:product-jsonld', function (e) {
-  var pre = document.createElement('pre');
-  pre.id = 'st-test-result'; pre.hidden = true;
   var d = e.detail || {};
+  // the widget re-renders and every render reports: keep ONE record, and never let a skip overwrite an applied result
+  var pre = document.getElementById('st-test-result');
+  if (pre && !/^skipped/.test(JSON.parse(pre.textContent.replace(/^[^{]*/, '')).mode || 'skipped')) return;
+  if (!pre) {
+    pre = document.createElement('pre');
+    pre.id = 'st-test-result'; pre.hidden = true;
+    document.body.appendChild(pre);
+  }
   // visibility of any template-rendered structured-data <img> inside StackTome widget shadow roots
-  d.hiddenImgs = [].map.call(document.querySelectorAll('[id^="stacktome-widget-"]'), function (h) {
+  d.hiddenImgs = [].map.call(document.querySelectorAll('[id^="stacktome-widget-"],[class*="stacktome-widget-"]'), function (h) {
     var i = h.shadowRoot && h.shadowRoot.querySelector('img[data-st-rating]');
     if (!i) return null;
     var r = i.getBoundingClientRect();
-    return { widget: h.id, display: getComputedStyle(i).display, w: r.width, h: r.height };
+    return { widget: h.id || h.className, display: getComputedStyle(i).display, w: r.width, h: r.height };
   }).filter(Boolean);
   pre.textContent = 'st-product-jsonld result: ' + JSON.stringify(d);
-  document.body.appendChild(pre);
+});
+/* TEST ONLY: audit every AggregateRating on the page, including inside the StackTome widgets' shadow roots. */
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    var out = { light: 0, shadow: [], jsonld: 0 };
+    var isAR = function (e) { return /schema\.org\/AggregateRating/i.test(e.getAttribute('itemtype') || ''); };
+    out.light = [].filter.call(document.querySelectorAll('[itemscope][itemtype]'), isAR).length;
+    [].forEach.call(document.querySelectorAll('[id^="stacktome-widget-"],[class*="stacktome-widget-"]'), function (h) {
+      if (!h.shadowRoot) return;
+      var n = [].filter.call(h.shadowRoot.querySelectorAll('[itemscope][itemtype]'), isAR).length;
+      var orphan = h.shadowRoot.querySelectorAll('[itemprop="ratingValue"],[itemprop="reviewCount"],[itemprop="ratingExplanation"]').length;
+      out.shadow.push({ host: h.id || h.className, aggregateRating: n, orphanRatingProps: orphan });
+    });
+    [].forEach.call(document.querySelectorAll('script[type="application/ld+json"]'), function (s) {
+      out.jsonld += (s.textContent.match(/"AggregateRating"/g) || []).length;
+    });
+    var pre = document.createElement('pre');
+    pre.id = 'st-test-audit'; pre.hidden = true;
+    pre.textContent = 'st-aggregaterating-audit: ' + JSON.stringify(out);
+    document.body.appendChild(pre);
+  }, 12000);
 });
 </script>
 </body>
